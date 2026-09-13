@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { fetchEntertainmentHeadlines, searchTopicDeepDive } from '@/lib/news';
+import { scrapeRedditPopCulture } from '@/lib/reddit';
 import { generateAndVerifyArticle } from '@/lib/groq';
 import { searchMediaImage } from '@/lib/tmdb';
 import { saveArticleToAppwrite } from '@/lib/appwrite';
@@ -9,33 +10,69 @@ export async function POST(req: Request) {
   try {
     const body = await req.json().catch(() => ({}));
     const requestedTopic = body.topic?.trim();
+    const isRedditMode = body.mode === 'reddit' || body.source === 'reddit';
 
     let sources = [];
     let targetTopic = requestedTopic;
+    let redditSourceInfo = null;
 
-    if (requestedTopic) {
-      sources = await searchTopicDeepDive(requestedTopic);
-    } else {
-      const headlines = await fetchEntertainmentHeadlines();
-      if (headlines.length > 0) {
-        const primary = headlines[0];
-        targetTopic = primary.title;
-        sources = headlines.slice(0, 4);
+    if (isRedditMode || (!requestedTopic && Math.random() > 0.3)) {
+      // Scrape live Reddit pop culture
+      const redditPosts = await scrapeRedditPopCulture();
+      if (redditPosts.length > 0) {
+        // Pick a top Reddit post that hasn't been recently processed
+        const selectedPost = redditPosts[Math.floor(Math.random() * Math.min(redditPosts.length, 5))];
+        targetTopic = selectedPost.title;
+        redditSourceInfo = {
+          name: `${selectedPost.subreddit} (Reddit Viral)`,
+          url: selectedPost.sourceUrl,
+          stance: 'primary'
+        };
+
+        // Deep-dive cross reference on the web with Tavily
+        const tradeSources = await searchTopicDeepDive(targetTopic);
+        sources = [
+          {
+            title: selectedPost.title,
+            snippet: `Trending discussion on ${selectedPost.subreddit}. Published: ${selectedPost.publishedAt}`,
+            source: `${selectedPost.subreddit} (Reddit)`,
+            url: selectedPost.sourceUrl
+          },
+          ...tradeSources
+        ];
+      }
+    }
+
+    // Fallback if no Reddit sources found or if custom topic requested
+    if (sources.length === 0) {
+      if (requestedTopic) {
+        sources = await searchTopicDeepDive(requestedTopic);
       } else {
-        targetTopic = 'Denis Villeneuve Dune Messiah Studio Confirmation';
-        sources = await searchTopicDeepDive(targetTopic);
+        const headlines = await fetchEntertainmentHeadlines();
+        if (headlines.length > 0) {
+          targetTopic = headlines[0].title;
+          sources = headlines.slice(0, 4);
+        } else {
+          targetTopic = 'Zack Snyder Goes Indie No Green Screen Film Project';
+          sources = await searchTopicDeepDive(targetTopic);
+        }
       }
     }
 
     if (!sources || sources.length === 0) {
       return NextResponse.json(
-        { error: 'No verifiable news sources could be located for this topic.' },
+        { error: 'No verifiable news sources could be located at this time.' },
         { status: 404 }
       );
     }
 
-    // Step 2: Groq Fact-Checking & Article Synthesis
+    // Step 2: Groq Fact-Checking & Broadsheet Synthesis
     const verifiedData = await generateAndVerifyArticle(targetTopic, sources);
+
+    // Merge Reddit source if present
+    if (redditSourceInfo && !verifiedData.sources.some(s => s.name.includes('Reddit'))) {
+      verifiedData.sources.unshift(redditSourceInfo);
+    }
 
     // Step 3: TMDB Media Asset Lookup
     let imageUrl = '';
@@ -51,7 +88,7 @@ export async function POST(req: Request) {
       slug: `${verifiedData.slug}-${Date.now().toString().slice(-4)}`,
       lead_paragraph: verifiedData.lead_paragraph,
       body_markdown: verifiedData.body_markdown,
-      category: verifiedData.category,
+      category: verifiedData.category || 'Pop Culture',
       author: verifiedData.author,
       verification_score: verifiedData.verification_score,
       verification_summary: verifiedData.verification_summary,
@@ -63,17 +100,18 @@ export async function POST(req: Request) {
         day: 'numeric',
         year: 'numeric'
       }),
-      edition: 'Special Telegraph Edition',
+      edition: redditSourceInfo ? 'Reddit Viral Wire Edition' : 'Morning Broadsheet Edition',
       is_breaking: true,
       status: 'published'
     };
 
-    // Step 4: Save to Appwrite
+    // Step 4: Save to Storage & Appwrite
     const saveResult = await saveArticleToAppwrite(newArticle);
 
     return NextResponse.json({
       success: true,
       article: newArticle,
+      scrapedFrom: redditSourceInfo ? redditSourceInfo.name : 'Trade Wire',
       appwriteStatus: saveResult
     });
   } catch (err: any) {

@@ -26,11 +26,11 @@ export default function Header({ onNewArticle, breakingNews = [] }: Props) {
   }, []);
 
   const defaultBreaking = [
-    'EXCLUSIVE: Universal Locks Christopher Nolan Event Film for Mid-Summer 2026',
-    'BOX OFFICE: Theatrical Receipts Surge 18% Across North American Exhibition',
-    'STUDIO DESK: Legendary Greenlights "Dune: Messiah" for Early 2026 Photography',
-    'STREAMING REPORT: Emmy Voters Signal Shift Toward Character-Driven Prestige Drama',
-    'DEVELOPMENT: A24 Expands Original Horror Slate with Record Production Investment'
+    'VIRAL ON r/movies: Zack Snyder Ditches Green Screens for Raw Practical Filmmaking',
+    'r/movies SCOOP: Danny Boyle Revives "Antarctica" with Austin Butler & Colin Farrell',
+    'r/popculturechat: Cillian Murphy\'s Son Aran Takes Center Stage in Dublin Drama "Youth"',
+    'r/entertainment: Hideo Kojima Expands "Physint" with Major Film & TV Studio Deal',
+    'r/popculturechat: Sydney Sweeney Addresses Trending Athletic Commercial Discourse'
   ];
 
   const tickers = breakingNews.length > 0 ? breakingNews : defaultBreaking;
