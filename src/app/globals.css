@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #fbf9f4;
+  --foreground: #141210;
+  --newsprint-border: #2c2825;
+}
+
+body {
+  color: var(--foreground);
+  background-color: var(--background);
+  font-family: var(--font-newsreader), Georgia, serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Authentic newsprint paper texture & double borders */
+.newspaper-double-border {
+  border-top: 4px double var(--newsprint-border);
+  border-bottom: 1px solid var(--newsprint-border);
+}
+
+.newspaper-divider-thick {
+  border-top: 3px solid var(--newsprint-border);
+}
+
+.newspaper-divider-thin {
+  border-top: 1px solid #d4cdbd;
+}
+
+.newspaper-column-rule {
+  border-right: 1px solid #dcd5c4;
+}
+
+/* Vintage drop-cap for opening paragraph */
+.drop-cap::first-letter {
+  font-family: var(--font-playfair), Georgia, serif;
+  float: left;
+  font-size: 4rem;
+  line-height: 0.8;
+  padding-top: 4px;
+  padding-right: 10px;
+  padding-bottom: 2px;
+  font-weight: 700;
+  color: #11100f;
+  text-transform: uppercase;
+}
+
+/* Teletype / Marquee animation */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: marquee 35s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Print Styles: Formats the web page like a real physical broadsheet newspaper */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .page-break {
+    page-break-before: always;
+  }
+  .newspaper-column-rule {
+    border-right: 1px solid #000000 !important;
+  }
+}
