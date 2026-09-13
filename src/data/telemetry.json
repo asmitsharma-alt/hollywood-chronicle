@@ -1,0 +1,112 @@
+{
+  "worker_id": "chronicle-worker-core-1",
+  "status": "idle",
+  "last_cycle_started_at": "2026-09-13T09:09:17.306Z",
+  "last_cycle_completed_at": "2026-09-13T09:10:52.534Z",
+  "next_scheduled_run_at": "2026-09-13T09:25:52.534Z",
+  "total_cycles_completed": 13,
+  "total_articles_discovered": 142,
+  "total_articles_published": 34,
+  "total_articles_updated": 6,
+  "total_duplicates_filtered": 54,
+  "uptime_seconds": 3600,
+  "active_sources_count": 16,
+  "recent_logs": [
+    {
+      "id": "log-1789290652531-1gk2",
+      "timestamp": "2026-09-13T09:10:52.531Z",
+      "source": "Deadline",
+      "action": "published",
+      "headline": "Published: \"&#8216;Misty Green&#8217; Review: Rosalind Eleazar Is The Wh...\"",
+      "details": "AI Verification: 9.6/10 | Certified by 4 Agents."
+    },
+    {
+      "id": "log-1789290646793-ey3r",
+      "timestamp": "2026-09-13T09:10:46.794Z",
+      "source": "Deadline",
+      "action": "published",
+      "headline": "Published: \"&#8216;I Play Rocky&#8217; Review: Peter Farrelly&#8217;s Se...\"",
+      "details": "AI Verification: 9.6/10 | Certified by 4 Agents."
+    },
+    {
+      "id": "log-1789290642803-oorv",
+      "timestamp": "2026-09-13T09:10:42.803Z",
+      "source": "Variety",
+      "action": "published",
+      "headline": "Published: \"&#8216;I Play Rocky&#8217; Review: Anthony Ippolito Channels...\"",
+      "details": "AI Verification: 9.6/10 | Certified by 4 Agents."
+    },
+    {
+      "id": "log-1789290639143-hndg",
+      "timestamp": "2026-09-13T09:10:39.144Z",
+      "source": "Variety",
+      "action": "published",
+      "headline": "Published: \"&#8216;Misty Green&#8217; Review: Chris Rock Tells the Story...\"",
+      "details": "AI Verification: 9.6/10 | Certified by 4 Agents."
+    },
+    {
+      "id": "log-1789290630047-s4v4",
+      "timestamp": "2026-09-13T09:10:30.047Z",
+      "source": "Variety",
+      "action": "published",
+      "headline": "Published: \"Animal Hospital Tops Roblox Innovation Awards 2026 as Platfo...\"",
+      "details": "AI Verification: 9.8/10 | Certified by 4 Agents."
+    },
+    {
+      "id": "log-1789290618758-wlnh",
+      "timestamp": "2026-09-13T09:10:18.758Z",
+      "source": "Variety",
+      "action": "published",
+      "headline": "Published: \"Mahershala Ali Finally Made His ‘Blade’ Film With ‘Your Moth...\"",
+      "details": "AI Verification: 9.6/10 | Certified by 4 Agents."
+    },
+    {
+      "id": "log-1789290612893-22yb",
+      "timestamp": "2026-09-13T09:10:12.893Z",
+      "source": "Variety",
+      "action": "published",
+      "headline": "Published: \"Chris Rock&#8217;s Hollywood Send-Up ‘Misty Green&#8217; Hit...\"",
+      "details": "AI Verification: 9.6/10 | Certified by 4 Agents."
+    },
+    {
+      "id": "log-1789290605885-biyy",
+      "timestamp": "2026-09-13T09:10:05.885Z",
+      "source": "Variety",
+      "action": "published",
+      "headline": "Published: \"FCC Chairman Slams James Talarico as Running a &#8216;Hoax&#...\"",
+      "details": "AI Verification: 9.6/10 | Certified by 4 Agents."
+    },
+    {
+      "id": "log-1789290596368-6gjb",
+      "timestamp": "2026-09-13T09:09:56.368Z",
+      "source": "Variety",
+      "action": "published",
+      "headline": "Published: \"Philippines Picks ‘Filipiñana’ for Oscar International Featu...\"",
+      "details": "AI Verification: 9.8/10 | Certified by 4 Agents."
+    },
+    {
+      "id": "log-1789290578390-8h3k",
+      "timestamp": "2026-09-13T09:09:38.390Z",
+      "source": "Variety",
+      "action": "published",
+      "headline": "Published: \"Trans Pregnancy Drama ‘Aman’ Secures Global Sales Deal Ahead...\"",
+      "details": "AI Verification: 9.7/10 | Certified by 4 Agents."
+    },
+    {
+      "id": "log-1789290562403-jhvg",
+      "timestamp": "2026-09-13T09:09:22.403Z",
+      "source": "Crawler Ingestion",
+      "action": "discovered",
+      "headline": "Multi-Vector Crawler Discovered 58 Items",
+      "details": "Reddit: 0 | RSS: 48 | NewsWire: 10"
+    },
+    {
+      "id": "log-seed-1",
+      "timestamp": "2026-09-13T09:06:24.185Z",
+      "source": "System Initialization",
+      "action": "published",
+      "headline": "The Hollywood Chronicle 24/7 Autonomous Intelligence Core Initialized",
+      "details": "Broadsheet printing & discovery engine operating nominally."
+    }
+  ]
+}

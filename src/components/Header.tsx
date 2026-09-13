@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Printer, Sparkles, Radio, CloudSun, Calendar } from 'lucide-react';
+import { Printer, Sparkles, Radio, CloudSun, Calendar, Activity } from 'lucide-react';
 import IngestModal from './IngestModal';
 import { Article } from '@/types/article';
 
@@ -66,7 +66,7 @@ export default function Header({ onNewArticle, breakingNews = [] }: Props) {
       <div className="py-6 px-4 text-center max-w-7xl mx-auto">
         <div className="border-t-2 border-b-2 border-stone-900 py-3 relative">
           <div className="text-[10px] font-mono tracking-[0.3em] uppercase text-stone-600 font-bold mb-1">
-            The Voice of the Motion Picture Trade & Modern Entertainment
+            The Voice of the Motion Picture Trade &amp; Modern Entertainment
           </div>
           <Link href="/" className="inline-block group">
             <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-[#11100f] uppercase leading-none font-headline group-hover:text-[#8b181b] transition">
@@ -89,16 +89,20 @@ export default function Header({ onNewArticle, breakingNews = [] }: Props) {
               Front Page
             </Link>
             <Link href="/?cat=Cinema" className="text-stone-700 hover:text-[#8b181b] transition">
-              Cinema & Studios
+              Cinema &amp; Studios
             </Link>
             <Link href="/?cat=Television" className="text-stone-700 hover:text-[#8b181b] transition">
-              Television & Streaming
+              Television &amp; Streaming
             </Link>
             <Link href="/?cat=Box+Office" className="text-stone-700 hover:text-[#8b181b] transition">
               Box Office Ledger
             </Link>
             <Link href="/?cat=Industry" className="text-stone-700 hover:text-[#8b181b] transition">
               Industry Dispatches
+            </Link>
+            <Link href="/admin" className="text-[#8b181b] hover:text-black transition flex items-center gap-1 font-bold">
+              <Activity className="w-3.5 h-3.5" />
+              <span>Newsroom Ops</span>
             </Link>
           </nav>
 

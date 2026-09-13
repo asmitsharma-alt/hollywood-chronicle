@@ -4,6 +4,7 @@ import { scrapeRedditPopCulture } from '@/lib/reddit';
 import { generateAndVerifyArticle } from '@/lib/groq';
 import { searchMediaImage } from '@/lib/tmdb';
 import { saveArticleToAppwrite } from '@/lib/appwrite';
+import { upsertArticle } from '@/lib/database/storage-engine';
 import { Article } from '@/types/article';
 
 export async function POST(req: Request) {
@@ -106,6 +107,7 @@ export async function POST(req: Request) {
     };
 
     // Step 4: Save to Storage & Appwrite
+    await upsertArticle(newArticle);
     const saveResult = await saveArticleToAppwrite(newArticle);
 
     return NextResponse.json({

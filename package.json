@@ -7,10 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test": "playwright test",
     "ingest": "ts-node scripts/ingest.ts"
   },
   "dependencies": {
+    "cheerio": "^1.2.0",
     "clsx": "^2.1.1",
+    "fast-xml-parser": "^5.11.1",
     "lucide-react": "^0.453.0",
     "next": "^14.2.15",
     "node-appwrite": "^14.1.0",
@@ -19,6 +22,7 @@
     "tailwind-merge": "^2.5.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@types/node": "^20.17.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",

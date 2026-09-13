@@ -1,21 +1,27 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo, Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 import Header from '@/components/Header';
 import VerificationBadge from '@/components/VerificationBadge';
 import BoxOfficeLedger from '@/components/BoxOfficeLedger';
 import { Article } from '@/types/article';
 import { FALLBACK_ARTICLES } from '@/lib/appwrite';
-import { ArrowRight, Clock, BookOpen, AlertCircle, Quote } from 'lucide-react';
+import { ArrowRight, Clock, BookOpen, AlertCircle, Quote, Search, Sparkles, Filter, CheckCircle2 } from 'lucide-react';
 
-export default function HomePage() {
+function HomePageContent() {
+  const searchParams = useSearchParams();
+  const categoryParam = searchParams.get('cat') || 'All';
+
   const [articles, setArticles] = useState<Article[]>(FALLBACK_ARTICLES);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState(categoryParam);
 
-  useEffect(() => {
-    fetch('/api/articles')
+  const fetchLatestArticles = () => {
+    fetch('/api/articles?limit=100')
       .then((res) => res.json())
       .then((data) => {
         if (data.articles && data.articles.length > 0) {
@@ -24,34 +30,110 @@ export default function HomePage() {
       })
       .catch((err) => console.error('Failed to load articles:', err))
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchLatestArticles();
+    // 24/7 background polling: automatically refresh the newspaper every 45 seconds
+    const interval = setInterval(fetchLatestArticles, 45000);
+    return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    if (categoryParam) {
+      setSelectedCategory(categoryParam);
+    }
+  }, [categoryParam]);
 
   const handleNewArticle = (newArt: Article) => {
     setArticles((prev) => [newArt, ...prev]);
   };
 
-  const leadArticle = articles[0] || FALLBACK_ARTICLES[0];
-  const secondaryLead = articles[1] || FALLBACK_ARTICLES[1];
-  const sideArticles = articles.slice(2, 6);
-  const bottomArticles = articles.slice(6);
+  const filteredArticles = useMemo(() => {
+    return articles.filter((art) => {
+      const matchesCategory =
+        selectedCategory === 'All' ||
+        art.category?.toLowerCase() === selectedCategory.toLowerCase();
+
+      const q = searchQuery.toLowerCase().trim();
+      const matchesSearch =
+        !q ||
+        art.title.toLowerCase().includes(q) ||
+        art.lead_paragraph.toLowerCase().includes(q) ||
+        art.body_markdown.toLowerCase().includes(q) ||
+        (art.tags && art.tags.some((t) => t.toLowerCase().includes(q)));
+
+      return matchesCategory && matchesSearch;
+    });
+  }, [articles, selectedCategory, searchQuery]);
+
+  const leadArticle = filteredArticles[0] || articles[0] || FALLBACK_ARTICLES[0];
+  const secondaryLead = filteredArticles[1] || articles[1] || FALLBACK_ARTICLES[1];
+  const sideArticles = filteredArticles.slice(2, 6);
+  const bottomArticles = filteredArticles.slice(6);
 
   const tickerHeadlines = articles.map((a) => `${a.category.toUpperCase()}: ${a.title}`);
 
+  const categories = ['All', 'Cinema', 'Television', 'Box Office', 'Industry', 'Pop Culture'];
+
   return (
     <div className="min-h-screen bg-[#fbf9f4] text-stone-900 flex flex-col font-body">
+      {/* Schema.org NewsMediaOrganization Rich JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'NewsMediaOrganization',
+            name: 'The Hollywood Chronicle',
+            url: 'https://hollywood-chronicle.vercel.app',
+            logo: 'https://hollywood-chronicle.vercel.app/favicon.ico',
+            sameAs: ['https://twitter.com', 'https://reddit.com'],
+            description: 'The authoritative daily dispatch on motion pictures, streaming, and entertainment culture. Verified by autonomous AI machine wire.'
+          })
+        }}
+      />
+
       <Header onNewArticle={handleNewArticle} breakingNews={tickerHeadlines} />
 
       <main className="max-w-7xl mx-auto px-4 py-6 flex-1 w-full">
-        {/* Newspaper Issue Subhead Strip */}
-        <div className="flex items-center justify-between border-b-2 border-stone-800 pb-2 mb-6 text-xs font-mono uppercase tracking-wider text-stone-700">
+        {/* Newspaper Issue Subhead Strip & Live Filter */}
+        <div className="flex flex-wrap items-center justify-between border-b-2 border-stone-800 pb-3 mb-6 gap-3 text-xs font-mono uppercase tracking-wider text-stone-700">
           <div className="flex items-center gap-2">
             <span className="bg-[#8b181b] text-white px-2 py-0.5 font-bold text-[10px]">
               FINAL DISPATCH
             </span>
-            <span>Hollywood Bureau • Wire Services & Studio Correspondents</span>
+            <span>Hollywood Bureau • Wire Services &amp; Studio Correspondents</span>
           </div>
-          <div className="hidden sm:block text-stone-500">
-            Certified by Truth Engine • Cross-Referenced Across 14 Trade Outlets
+
+          {/* Category Tabs & Quick Search */}
+          <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+            <div className="flex items-center gap-1 overflow-x-auto py-1">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-2 py-0.5 text-[11px] font-mono transition border ${
+                    selectedCategory.toLowerCase() === cat.toLowerCase()
+                      ? 'bg-stone-900 text-white border-stone-900 font-bold'
+                      : 'bg-white text-stone-700 border-stone-300 hover:bg-stone-100'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            <div className="relative">
+              <Search className="w-3.5 h-3.5 absolute left-2.5 top-2 text-stone-400" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search wire..."
+                className="pl-7 pr-2.5 py-1 text-xs font-mono bg-white border border-stone-400 focus:outline-none focus:border-stone-900 w-32 sm:w-44"
+              />
+            </div>
           </div>
         </div>
 
@@ -78,14 +160,23 @@ export default function HomePage() {
                       {art.published_at}
                     </span>
                   </div>
+
                   <Link href={`/article/${art.slug}`} className="group block">
                     <h4 className="font-serif font-bold text-base leading-snug text-stone-900 group-hover:text-[#8b181b] transition">
                       {art.title}
                     </h4>
                   </Link>
+
+                  {art.version && art.version > 1 && (
+                    <div className="inline-block bg-amber-100 text-amber-900 border border-amber-300 text-[9px] font-mono font-bold px-1 py-0.2 uppercase">
+                      v{art.version}.0 • Evolved Bulletin
+                    </div>
+                  )}
+
                   <p className="text-xs text-stone-700 line-clamp-3 leading-relaxed font-serif">
                     {art.lead_paragraph}
                   </p>
+
                   <div className="pt-1 flex items-center justify-between text-[11px]">
                     <VerificationBadge
                       score={art.verification_score}
@@ -104,7 +195,7 @@ export default function HomePage() {
               ))}
             </div>
 
-            {/* Print Vintage Ad / Announcement Box */}
+            {/* Vintage Classified Ad */}
             <div className="border-2 border-dashed border-stone-400 bg-stone-100 p-3.5 text-center space-y-2">
               <span className="text-[9px] font-mono uppercase tracking-widest text-stone-500 block">
                 Trade Classified Notice
@@ -113,7 +204,7 @@ export default function HomePage() {
                 70mm Film Projectors Needed
               </h5>
               <p className="text-[11px] font-serif italic text-stone-700 leading-tight">
-                Exhibitors with certified 15-perf 70mm installations in North America & Western Europe invited for 2026 studio allocation.
+                Exhibitors with certified 15-perf 70mm installations in North America &amp; Western Europe invited for 2026 studio allocation.
               </p>
               <span className="text-[9px] font-mono block text-stone-500">
                 Inquire via Universal Theatrical Desk
@@ -121,19 +212,23 @@ export default function HomePage() {
             </div>
           </aside>
 
-          {/* Column 2: Lead Story & Primary Feature (Center, 6 cols) */}
+          {/* Column 2: Center Fold / Lead Story (Center, 6 cols) */}
           <section className="lg:col-span-6 order-1 lg:order-2 space-y-6 lg:border-r border-stone-300 lg:pr-6">
             {leadArticle && (
               <article className="space-y-4">
-                {/* Eyebrow & Headline */}
                 <div className="space-y-1.5 text-center lg:text-left">
                   <div className="flex items-center justify-center lg:justify-start gap-2">
                     <span className="px-2 py-0.5 bg-[#8b181b] text-white text-[10px] font-mono font-bold uppercase tracking-widest">
-                      {leadArticle.is_breaking ? 'FRONT PAGE WIRE' : 'FEATURE DISPATCH'}
+                      FRONT PAGE WIRE
                     </span>
                     <span className="text-[11px] font-mono text-stone-600 uppercase font-bold tracking-wider">
-                      {leadArticle.category} • {leadArticle.edition}
+                      {leadArticle.category} • {leadArticle.edition || 'Trade Wire Dispatch'}
                     </span>
+                    {leadArticle.version && leadArticle.version > 1 && (
+                      <span className="px-1.5 py-0.2 bg-amber-200 text-amber-900 border border-amber-400 text-[10px] font-mono font-bold">
+                        v{leadArticle.version}.0 EVOLVED
+                      </span>
+                    )}
                   </div>
 
                   <Link href={`/article/${leadArticle.slug}`} className="group block">
@@ -143,37 +238,37 @@ export default function HomePage() {
                   </Link>
 
                   <p className="font-serif text-sm sm:text-base italic text-stone-700 leading-snug border-b border-stone-300 pb-3">
-                    {leadArticle.lead_paragraph.split('—')[1] || leadArticle.lead_paragraph}
+                    {leadArticle.lead_paragraph}
                   </p>
                 </div>
 
-                {/* Main Hero Photograph with Authentic News Caption */}
-                {leadArticle.image_url && (
-                  <div className="space-y-1.5">
-                    <div className="relative aspect-[16/9] w-full border border-stone-400 bg-stone-200 overflow-hidden">
-                      <Image
-                        src={leadArticle.image_url}
-                        alt={leadArticle.title}
-                        fill
-                        className="object-cover contrast-[1.05] filter grayscale-[15%]"
-                        priority
-                      />
-                    </div>
-                    <div className="flex items-start justify-between text-[11px] font-mono text-stone-600 leading-tight">
-                      <span className="italic font-serif text-stone-800">
-                        {leadArticle.image_caption || 'Promotional photography / archival studio records.'}
-                      </span>
-                      <span className="uppercase text-[9px] text-stone-500 shrink-0 ml-2">
-                        CHRONICLE WIRE PHOTO
-                      </span>
-                    </div>
+                {/* Hero Lead Image */}
+                <div className="space-y-1.5">
+                  <div className="relative aspect-[16/9] w-full border border-stone-400 bg-stone-200 overflow-hidden">
+                    <Image
+                      src={leadArticle.image_url || 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1200&q=80'}
+                      alt={leadArticle.title}
+                      fill
+                      priority
+                      className="object-cover contrast-[1.05] filter grayscale-[15%]"
+                    />
                   </div>
-                )}
+                  <div className="flex items-start justify-between text-[11px] font-mono text-stone-600 leading-tight">
+                    <span className="italic font-serif text-stone-800">
+                      {leadArticle.image_caption || 'Archival production photography.'}
+                    </span>
+                    <span className="uppercase text-[9px] text-stone-500 shrink-0 ml-2">
+                      CHRONICLE WIRE PHOTO
+                    </span>
+                  </div>
+                </div>
 
-                {/* Byline & Verification Stamp */}
+                {/* Byline and Fact Check Badge Bar */}
                 <div className="flex flex-wrap items-center justify-between gap-2 border-t border-b border-stone-300 py-2 text-xs font-mono">
                   <div className="text-stone-800">
-                    <span className="font-bold uppercase tracking-wider">{leadArticle.author}</span>
+                    <span className="font-bold uppercase tracking-wider">
+                      {leadArticle.author || 'Eleanor Vance, Senior Trade Editor'}
+                    </span>
                     <span className="text-stone-500 block text-[10px]">
                       Filed on {leadArticle.published_at} • Hollywood Bureau
                     </span>
@@ -186,16 +281,19 @@ export default function HomePage() {
                   />
                 </div>
 
-                {/* Drop-cap Body Text in Two Broadsheet Columns */}
+                {/* Lead Article Body snippet in 2 Print Columns */}
                 <div className="sm:columns-2 gap-6 text-xs sm:text-sm text-stone-900 leading-relaxed font-serif text-justify space-y-3">
                   <p className="drop-cap">
                     {leadArticle.lead_paragraph}
                   </p>
-                  {leadArticle.body_markdown.split('\n\n').slice(0, 3).map((para, i) => (
-                    <p key={i} className="indent-4">
-                      {para.replace(/\*\*/g, '').replace(/\*/g, '')}
-                    </p>
-                  ))}
+                  {leadArticle.body_markdown
+                    .split('\n\n')
+                    .slice(0, 3)
+                    .map((para, i) => (
+                      <p key={i} className="indent-4">
+                        {para.replace(/^##\s+/, '')}
+                      </p>
+                    ))}
                 </div>
 
                 <div className="pt-2 border-t border-stone-200 flex justify-end">
@@ -203,13 +301,14 @@ export default function HomePage() {
                     href={`/article/${leadArticle.slug}`}
                     className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-[#8b181b] hover:text-black transition"
                   >
-                    Continue Reading Full Broadsheet Text <ArrowRight className="w-3.5 h-3.5" />
+                    <span>Continue Reading Full Broadsheet Text</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>
               </article>
             )}
 
-            {/* Horizontal Broadsheet Divider */}
+            {/* Ornamental Divider */}
             <div className="newspaper-divider-thick my-6"></div>
 
             {/* Secondary Lead Story */}
@@ -220,23 +319,23 @@ export default function HomePage() {
                   <span>•</span>
                   <span>{secondaryLead.category}</span>
                 </div>
+
                 <Link href={`/article/${secondaryLead.slug}`} className="group block">
                   <h3 className="font-serif text-2xl font-bold leading-snug text-stone-900 group-hover:text-[#8b181b] transition">
                     {secondaryLead.title}
                   </h3>
                 </Link>
+
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-start">
-                  {secondaryLead.image_url && (
-                    <div className="relative aspect-[4/3] w-full border border-stone-400 bg-stone-200">
-                      <Image
-                        src={secondaryLead.image_url}
-                        alt={secondaryLead.title}
-                        fill
-                        className="object-cover filter grayscale-[20%]"
-                      />
-                    </div>
-                  )}
-                  <div className={secondaryLead.image_url ? 'sm:col-span-2 space-y-2' : 'col-span-3 space-y-2'}>
+                  <div className="relative aspect-[4/3] w-full border border-stone-400 bg-stone-200">
+                    <Image
+                      src={secondaryLead.image_url || 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1200&q=80'}
+                      alt={secondaryLead.title}
+                      fill
+                      className="object-cover filter grayscale-[20%]"
+                    />
+                  </div>
+                  <div className="sm:col-span-2 space-y-2">
                     <p className="text-xs text-stone-800 leading-relaxed font-serif">
                       {secondaryLead.lead_paragraph}
                     </p>
@@ -260,12 +359,12 @@ export default function HomePage() {
             )}
           </section>
 
-          {/* Column 3: Theatrical Ledger & Industry Radar (Right, 3 cols) */}
+          {/* Column 3: Theatrical Ledger & Verified Facts (Right, 3 cols) */}
           <aside className="lg:col-span-3 order-3 space-y-6">
             {/* Box Office Ledger Table */}
             <BoxOfficeLedger />
 
-            {/* Truth Bureau / Fact-Check Radar Widget */}
+            {/* Truth Meter / Rumor vs Confirmed Fact Check Panel */}
             <div className="border-2 border-stone-800 bg-[#f4efe4] p-4 space-y-3 font-serif">
               <div className="border-b border-stone-400 pb-2">
                 <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-[#8b181b] block">
@@ -275,6 +374,7 @@ export default function HomePage() {
                   Rumor vs. Confirmed Wire
                 </h4>
               </div>
+
               <ul className="text-xs divide-y divide-stone-300 space-y-2">
                 <li className="pt-2 first:pt-0 space-y-1">
                   <span className="font-mono text-[9px] px-1.5 py-0.5 bg-emerald-800 text-white font-bold uppercase">
@@ -284,7 +384,7 @@ export default function HomePage() {
                     Nolan Mid-Summer 2026 IMAX Theatrical Window
                   </p>
                   <span className="text-[10px] font-mono text-stone-600 block">
-                    Corroborated: Universal & IMAX filings.
+                    Corroborated: Universal &amp; IMAX filings.
                   </span>
                 </li>
                 <li className="pt-2 space-y-1">
@@ -330,7 +430,7 @@ export default function HomePage() {
           <section className="mt-12 pt-6 border-t-4 border-stone-900 space-y-4">
             <div className="flex items-center justify-between border-b border-stone-400 pb-2">
               <h3 className="font-serif text-2xl font-bold uppercase tracking-tight text-stone-900">
-                Departmental Dispatches & Industry Records
+                Departmental Dispatches &amp; Industry Records ({bottomArticles.length})
               </h3>
               <span className="font-mono text-xs text-stone-500 uppercase">
                 Section B • Broadsheet Archives
@@ -349,6 +449,13 @@ export default function HomePage() {
                       {art.title}
                     </h4>
                   </Link>
+
+                  {art.version && art.version > 1 && (
+                    <span className="inline-block bg-amber-100 text-amber-800 text-[9px] font-mono px-1 py-0.2 border border-amber-300 font-bold">
+                      v{art.version}.0 EVOLVED
+                    </span>
+                  )}
+
                   <p className="text-xs text-stone-700 line-clamp-3 font-serif leading-relaxed">
                     {art.lead_paragraph}
                   </p>
@@ -381,10 +488,10 @@ export default function HomePage() {
             </div>
             <div>
               <h5 className="font-mono font-bold text-stone-900 uppercase text-xs mb-2">
-                Machine Verification
+                Autonomous AI Core
               </h5>
               <p className="text-[11px] leading-relaxed text-stone-600 font-mono">
-                Powered by Groq Llama 3.3 & GPT-OSS inference engines. News extraction via NewsAPI and Tavily Web Search.
+                4-Agent editorial matrix: Content, Fact-Check, SEO, and Quality agents operating 24/7 on Groq LPU inference.
               </p>
             </div>
             <div>
@@ -392,25 +499,40 @@ export default function HomePage() {
                 Cloud Archive
               </h5>
               <p className="text-[11px] leading-relaxed text-stone-600 font-mono">
-                Articles & verification records persisted on Appwrite Cloud (Singapore Node: smoc times).
+                Dual-layer persistence on Appwrite Cloud Database with transactional failover engine.
               </p>
             </div>
             <div>
               <h5 className="font-mono font-bold text-stone-900 uppercase text-xs mb-2">
-                Media Credits
+                Operations &amp; Wire
               </h5>
               <p className="text-[11px] leading-relaxed text-stone-600 font-mono">
-                Theatrical photography, box office tracking, and posters furnished by The Movie Database (TMDB).
+                Real-time crawling across Reddit, Variety, Deadline, and Google News RSS. <Link href="/admin" className="underline font-bold text-[#8b181b]">View Operations</Link>
               </p>
             </div>
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono text-stone-500 uppercase">
             <span>© 2026 The Hollywood Chronicle Publishing Co. All Rights Reserved.</span>
-            <span>Printed at Hollywood, California • Issue No. 257</span>
+            <span>Printed at Hollywood, California • Autonomous Edition 2.0</span>
           </div>
         </div>
       </footer>
     </div>
   );
 }
+
+export default function HomePage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#fbf9f4] flex items-center justify-center font-mono text-xs text-stone-600">
+          Printing Daily Broadsheet Edition...
+        </div>
+      }
+    >
+      <HomePageContent />
+    </Suspense>
+  );
+}
+

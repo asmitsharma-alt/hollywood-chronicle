@@ -5,12 +5,54 @@ import { notFound } from 'next/navigation';
 import Header from '@/components/Header';
 import VerificationBadge from '@/components/VerificationBadge';
 import { fetchArticleBySlug } from '@/lib/appwrite';
-import { ArrowLeft, Clock, ShieldCheck, Share2, ExternalLink, Printer } from 'lucide-react';
-import { ArticleSource } from '@/types/article';
+import { ArrowLeft, Clock, ShieldCheck, Share2, ExternalLink, Printer, CheckCircle2, History, AlertTriangle } from 'lucide-react';
+import { ArticleSource, StoryUpdate } from '@/types/article';
+import { Metadata } from 'next';
 
 interface PageProps {
   params: {
     slug: string;
+  };
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const article = await fetchArticleBySlug(params.slug);
+  if (!article) {
+    return {
+      title: 'Article Not Found | The Hollywood Chronicle',
+    };
+  }
+
+  const title = article.seo_agent?.meta_title || `${article.title} | The Hollywood Chronicle`;
+  const description = article.seo_agent?.meta_description || article.lead_paragraph;
+  const keywords = article.seo_agent?.keywords || article.tags || ['Hollywood', 'Cinema', 'News'];
+
+  return {
+    title,
+    description,
+    keywords,
+    openGraph: {
+      title,
+      description,
+      type: 'article',
+      publishedTime: article.published_at,
+      modifiedTime: article.last_updated_at || article.published_at,
+      authors: [article.author],
+      images: [
+        {
+          url: article.image_url || 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1200&q=80',
+          width: 1200,
+          height: 630,
+          alt: article.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [article.image_url],
+    },
   };
 }
 
@@ -28,8 +70,44 @@ export default async function ArticlePage({ params }: PageProps) {
     sources = [];
   }
 
+  const updates: StoryUpdate[] = article.update_history || [];
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    headline: article.title,
+    description: article.lead_paragraph,
+    image: [article.image_url],
+    datePublished: article.published_at,
+    dateModified: article.last_updated_at || article.published_at,
+    author: [
+      {
+        '@type': 'Person',
+        name: article.author,
+      },
+    ],
+    publisher: {
+      '@type': 'Organization',
+      name: 'The Hollywood Chronicle',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://hollywood-chronicle.vercel.app/favicon.ico',
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://hollywood-chronicle.vercel.app/article/${article.slug}`,
+    },
+  };
+
   return (
     <div className="min-h-screen bg-[#fbf9f4] text-stone-900 flex flex-col font-body">
+      {/* Schema.org NewsArticle JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <Header />
 
       <main className="max-w-4xl mx-auto px-4 py-8 flex-1 w-full space-y-6">
@@ -52,8 +130,15 @@ export default async function ArticlePage({ params }: PageProps) {
         {/* Article Headline & Deck */}
         <article className="space-y-6">
           <div className="text-center space-y-3 pt-2">
-            <div className="inline-block px-2.5 py-0.5 bg-[#8b181b] text-white text-[10px] font-mono font-bold uppercase tracking-widest">
-              {article.is_breaking ? 'BREAKING WIRE DISPATCH' : 'BROADSHEET REPORT'}
+            <div className="inline-flex items-center gap-2">
+              <span className="px-2.5 py-0.5 bg-[#8b181b] text-white text-[10px] font-mono font-bold uppercase tracking-widest">
+                {article.is_breaking ? 'BREAKING WIRE DISPATCH' : 'BROADSHEET REPORT'}
+              </span>
+              {article.version && article.version > 1 && (
+                <span className="px-2 py-0.5 bg-amber-100 text-amber-900 border border-amber-300 text-[10px] font-mono font-bold uppercase">
+                  v{article.version}.0 • EVOLVED STORY
+                </span>
+              )}
             </div>
 
             <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-[#11100f] leading-[1.1]">
@@ -82,6 +167,22 @@ export default async function ArticlePage({ params }: PageProps) {
             </div>
           </div>
 
+          {/* Executive Takeaways Box (from Content Agent) */}
+          {article.content_agent?.executive_takeaways && article.content_agent.executive_takeaways.length > 0 && (
+            <div className="border-2 border-stone-800 bg-[#f4efe4] p-4 font-serif space-y-2">
+              <span className="font-mono text-[10px] uppercase font-bold text-[#8b181b] tracking-wider block">
+                Executive Wire Takeaways
+              </span>
+              <ul className="space-y-1.5 text-xs sm:text-sm text-stone-800 list-disc list-inside">
+                {article.content_agent.executive_takeaways.map((takeaway, idx) => (
+                  <li key={idx} className="leading-snug">
+                    <span className="font-serif">{takeaway}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           {/* Featured Image with Print Caption */}
           {article.image_url && (
             <div className="space-y-2">
@@ -105,17 +206,47 @@ export default async function ArticlePage({ params }: PageProps) {
             </div>
           )}
 
-          {/* Article Prose with Drop Cap */}
+          {/* Story Evolution / Revision Log (if updated) */}
+          {updates.length > 0 && (
+            <div className="border border-amber-300 bg-amber-50 p-4 space-y-2 font-mono text-xs">
+              <div className="flex items-center gap-1.5 text-amber-900 font-bold uppercase tracking-wider text-[11px]">
+                <History className="w-3.5 h-3.5" />
+                <span>Story Evolution Log ({updates.length} Updates Recorded)</span>
+              </div>
+              <div className="divide-y divide-amber-200 space-y-2">
+                {updates.map((upd, idx) => (
+                  <div key={idx} className="pt-2 first:pt-0 space-y-1">
+                    <div className="flex items-center justify-between text-[10px] text-amber-800">
+                      <span className="font-bold">{upd.headline}</span>
+                      <span>{new Date(upd.timestamp).toLocaleTimeString()}</span>
+                    </div>
+                    <p className="text-amber-950 font-serif">{upd.summary}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Article Prose with Drop Cap and Headings */}
           <div className="prose prose-stone max-w-none text-base sm:text-lg leading-relaxed font-serif text-stone-900 pt-4 space-y-6">
             <p className="drop-cap leading-relaxed">
               {article.lead_paragraph}
             </p>
 
-            {article.body_markdown.split('\n\n').map((paragraph, idx) => (
-              <p key={idx} className="leading-relaxed">
-                {paragraph.replace(/\*\*/g, '').replace(/\*/g, '')}
-              </p>
-            ))}
+            {article.body_markdown.split('\n\n').map((paragraph, idx) => {
+              if (paragraph.startsWith('## ')) {
+                return (
+                  <h3 key={idx} className="font-serif text-xl sm:text-2xl font-bold uppercase tracking-tight text-stone-900 border-b border-stone-300 pb-1 mt-6 mb-2">
+                    {paragraph.replace(/^##\s+/, '')}
+                  </h3>
+                );
+              }
+              return (
+                <p key={idx} className="leading-relaxed">
+                  {paragraph.replace(/\*\*/g, '').replace(/\*/g, '')}
+                </p>
+              );
+            })}
           </div>
 
           {/* Machine Audit & Verification Box */}
@@ -123,7 +254,7 @@ export default async function ArticlePage({ params }: PageProps) {
             <div className="flex items-start justify-between border-b-2 border-stone-800 pb-3">
               <div>
                 <span className="text-[10px] font-mono tracking-widest uppercase text-[#8b181b] font-bold block">
-                  Truth Verification Protocol • Machine Audit Certificate
+                  Truth Verification Protocol • 4-Agent Machine Audit
                 </span>
                 <h3 className="font-serif text-2xl font-bold text-stone-900 mt-0.5">
                   Editorial Corroboration Record
@@ -139,6 +270,21 @@ export default async function ArticlePage({ params }: PageProps) {
               {article.verification_summary ||
                 'This report was compiled and cross-referenced against official press releases, studio filings, and multiple independent trade accounts by Groq AI inference. No irreconcilable discrepancies were found.'}
             </p>
+
+            {/* Verified claims check */}
+            {article.fact_check_agent?.verified_claims && (
+              <div className="space-y-1 pt-1 font-mono text-xs">
+                <span className="font-bold text-emerald-900 uppercase text-[10px] block">
+                  Confirmed Consensus Points:
+                </span>
+                {article.fact_check_agent.verified_claims.map((claim, idx) => (
+                  <div key={idx} className="flex items-center gap-1.5 text-stone-700">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                    <span>{claim}</span>
+                  </div>
+                ))}
+              </div>
+            )}
 
             {sources.length > 0 && (
               <div className="space-y-2 pt-2">

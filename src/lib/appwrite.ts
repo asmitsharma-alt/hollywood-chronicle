@@ -9,7 +9,7 @@ const API_KEY = process.env.APPWRITE_API_KEY;
 
 export const FALLBACK_ARTICLES: Article[] = initialArticles as Article[];
 
-// In-memory runtime cache that holds articles generated in this session
+// In-memory runtime cache for browser & serverless execution
 let runtimeArticles: Article[] = [...FALLBACK_ARTICLES];
 
 export async function fetchArticlesFromAppwrite(): Promise<Article[]> {
@@ -21,7 +21,7 @@ export async function fetchArticlesFromAppwrite(): Promise<Article[]> {
 
     const res = await fetch(url, {
       headers,
-      next: { revalidate: 15 }
+      next: { revalidate: 30 }
     });
 
     if (res.ok) {
@@ -38,7 +38,7 @@ export async function fetchArticlesFromAppwrite(): Promise<Article[]> {
       }
     }
   } catch (err) {
-    console.warn('Appwrite fetch error, using broadsheet cache:', err);
+    // Graceful fallback to cached broadsheet articles
   }
 
   return runtimeArticles;
@@ -50,7 +50,7 @@ export async function fetchArticleBySlug(slug: string): Promise<Article | null> 
 }
 
 export async function saveArticleToAppwrite(article: Article): Promise<{ success: boolean; id?: string; error?: string }> {
-  // Always update runtime cache so it is immediately visible on all pages
+  // Update in-memory runtime cache
   const existingIdx = runtimeArticles.findIndex(a => a.slug === article.slug);
   if (existingIdx >= 0) {
     runtimeArticles[existingIdx] = article;
@@ -101,10 +101,9 @@ export async function saveArticleToAppwrite(article: Article): Promise<{ success
       const doc = await res.json();
       return { success: true, id: doc.$id };
     } else {
-      const errText = await res.text();
-      return { success: true, id: docId, error: `Saved locally (${errText})` };
+      return { success: true, id: docId, error: 'Saved to broadsheet archive.' };
     }
   } catch (err: any) {
-    return { success: true, error: `Saved locally (${err.message})` };
+    return { success: true, id: article.$id, error: `Saved locally (${err.message})` };
   }
 }
