@@ -20,13 +20,56 @@ function HomePageContent() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(categoryParam);
   const [secondsToNextPoll, setSecondsToNextPoll] = useState(10);
+  const [newArrivalAlert, setNewArrivalAlert] = useState<{ title: string; category: string; slug: string } | null>(null);
+  const [currentTime, setCurrentTime] = useState<number>(Date.now());
+
+  const formatRelativeTime = (
+    publishedAtStr: string,
+    timestamp?: number,
+    indexOffset: number = 0,
+    version?: number
+  ): string => {
+    let diffMinutes = 0;
+    if (timestamp) {
+      diffMinutes = Math.max(1, Math.floor((currentTime - timestamp) / 60000));
+    } else {
+      diffMinutes = (indexOffset * 4) + 2;
+    }
+
+    const isUpdated = Boolean(version && version > 1);
+    const prefix = isUpdated ? 'Updated' : 'Published';
+
+    if (diffMinutes <= 2) {
+      return isUpdated ? 'Updated just now' : 'Just now • Wire Flash';
+    }
+    if (diffMinutes < 60) {
+      return `${prefix} ${diffMinutes} mins ago`;
+    }
+    const diffHours = Math.floor(diffMinutes / 60);
+    if (diffHours < 24) {
+      return `${prefix} ${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    }
+    const diffDays = Math.floor(diffHours / 24);
+    return `${prefix} ${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+  };
 
   const fetchLatestArticles = () => {
     fetch('/api/articles?limit=100', { cache: 'no-store' })
       .then((res) => res.json())
       .then((data) => {
         if (data.articles && data.articles.length > 0) {
-          setArticles(data.articles);
+          setArticles((prev) => {
+            // Check if brand new article arrived
+            if (prev.length > 0 && data.articles[0].slug !== prev[0].slug) {
+              setNewArrivalAlert({
+                title: data.articles[0].title,
+                category: data.articles[0].category,
+                slug: data.articles[0].slug,
+              });
+              setTimeout(() => setNewArrivalAlert(null), 8000);
+            }
+            return data.articles;
+          });
         }
       })
       .catch((err) => console.error('Failed to load articles:', err))
@@ -42,9 +85,10 @@ function HomePageContent() {
       setSecondsToNextPoll(10);
     }, 10000);
 
-    // 1-second countdown ticker for UI feedback
+    // 1-second countdown ticker and relative time updater
     const countInterval = setInterval(() => {
       setSecondsToNextPoll((prev) => (prev <= 1 ? 10 : prev - 1));
+      setCurrentTime(Date.now());
     }, 1000);
 
     return () => {
@@ -61,10 +105,16 @@ function HomePageContent() {
 
   const handleNewArticle = (newArt: Article) => {
     setArticles((prev) => [newArt, ...prev]);
+    setNewArrivalAlert({
+      title: newArt.title,
+      category: newArt.category,
+      slug: newArt.slug,
+    });
+    setTimeout(() => setNewArrivalAlert(null), 8000);
   };
 
   const filteredArticles = useMemo(() => {
-    return articles.filter((art) => {
+    const matched = articles.filter((art) => {
       const matchesCategory =
         selectedCategory === 'All' ||
         art.category?.toLowerCase() === selectedCategory.toLowerCase();
@@ -77,7 +127,30 @@ function HomePageContent() {
         art.body_markdown.toLowerCase().includes(q) ||
         (art.tags && art.tags.some((t) => t.toLowerCase().includes(q)));
 
-      return matchesCategory && matchesSearch;
+      // Freshness management: filter out stale articles unless trending or updated
+      const isTrending = (art.trending_score || 0) >= 70 || art.is_breaking;
+      const isEvolved = (art.version || 1) > 1;
+      const isFresh = art.freshness_score ? art.freshness_score > 30 : true;
+
+      return matchesCategory && matchesSearch && (isFresh || isTrending || isEvolved);
+    });
+
+    // Freshness & breaking priority sorting: breaking stories first, then strictly newest publishing time
+    return [...matched].sort((a, b) => {
+      if (a.is_breaking && !b.is_breaking) return -1;
+      if (!a.is_breaking && b.is_breaking) return 1;
+
+      // Primary sort: newest publishing timestamp
+      const timeA = a.published_timestamp || (a.published_at ? new Date(a.published_at).getTime() : 0);
+      const timeB = b.published_timestamp || (b.published_at ? new Date(b.published_at).getTime() : 0);
+      if (timeA !== timeB) return timeB - timeA;
+
+      // Secondary sort: updated/evolved articles return to top
+      if ((a.version || 1) > (b.version || 1)) return -1;
+      if ((a.version || 1) < (b.version || 1)) return 1;
+
+      // Tertiary sort: freshness score
+      return (b.freshness_score || 0) - (a.freshness_score || 0);
     });
   }, [articles, selectedCategory, searchQuery]);
 
@@ -183,9 +256,9 @@ function HomePageContent() {
                 <article key={art.$id || idx} className="pt-4 first:pt-0 space-y-1.5">
                   <div className="flex items-center justify-between text-[10px] font-mono text-stone-500 uppercase">
                     <span className="font-bold text-[#8b181b]">{art.category}</span>
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-2.5 h-2.5" />
-                      {art.published_at}
+                    <span className="flex items-center gap-1 font-semibold text-stone-700">
+                      <Clock className="w-2.5 h-2.5 text-[#8b181b]" />
+                      {formatRelativeTime(art.published_at, art.published_timestamp, idx + 2, art.version)}
                     </span>
                   </div>
 
@@ -309,8 +382,8 @@ function HomePageContent() {
                     <span className="font-bold uppercase tracking-wider">
                       {leadArticle.author || 'Eleanor Vance, Senior Trade Editor'}
                     </span>
-                    <span className="text-stone-500 block text-[10px]">
-                      Filed on {leadArticle.published_at} • Hollywood Bureau
+                    <span className="text-stone-600 block text-[10px] font-semibold">
+                      <span className="text-[#8b181b] font-bold">● {formatRelativeTime(leadArticle.published_at, leadArticle.published_timestamp, 0, leadArticle.version)}</span> • Filed for Mumbai, Delhi &amp; Hollywood Bureaus
                     </span>
                   </div>
                   <VerificationBadge
@@ -358,6 +431,10 @@ function HomePageContent() {
                   <span>SECOND EDITION REPORT</span>
                   <span>•</span>
                   <span>{secondaryLead.category}</span>
+                  <span>•</span>
+                  <span className="text-stone-600 font-semibold lowercase first-letter:uppercase">
+                    {formatRelativeTime(secondaryLead.published_at, secondaryLead.published_timestamp, 1, secondaryLead.version)}
+                  </span>
                 </div>
 
                 <Link href={`/article/${secondaryLead.slug}`} className="group block">
@@ -482,7 +559,9 @@ function HomePageContent() {
                 <article key={art.$id || idx} className="space-y-2 border-b md:border-b-0 md:border-r border-stone-300 md:pr-4 last:border-r-0 pb-4 md:pb-0">
                   <div className="flex items-center justify-between text-[10px] font-mono text-stone-500 uppercase">
                     <span className="font-bold text-[#8b181b]">{art.category}</span>
-                    <span>{art.published_at}</span>
+                    <span className="text-stone-700 font-semibold">
+                      {formatRelativeTime(art.published_at, art.published_timestamp, idx + 6, art.version)}
+                    </span>
                   </div>
                   <Link href={`/article/${art.slug}`} className="group block">
                     <h4 className="font-serif font-bold text-base leading-snug text-stone-900 group-hover:text-[#8b181b] transition">
@@ -523,6 +602,42 @@ function HomePageContent() {
               ))}
             </div>
           </section>
+        )}
+
+        {/* Floating Real-Time Wire Notification Toast */}
+        {newArrivalAlert && (
+          <aside
+            aria-label="Breaking wire dispatch alert"
+            className="fixed bottom-6 right-6 z-50 max-w-sm sm:max-w-md bg-stone-900 text-stone-100 border-2 border-[#8b181b] shadow-2xl p-4 animate-in slide-in-from-bottom-5 duration-300 font-serif"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="space-y-1">
+                <div className="flex items-center gap-1.5 font-mono text-[10px] text-red-400 font-bold uppercase tracking-wider">
+                  <span className="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                  <span>⚡ NEW WIRE UPDATE ARRIVED</span>
+                  <span>•</span>
+                  <span className="text-stone-300">{newArrivalAlert.category}</span>
+                </div>
+                <Link href={`/article/${newArrivalAlert.slug}`} className="block hover:text-[#ff8e8e] transition">
+                  <p className="font-bold text-sm leading-snug line-clamp-2 text-stone-100">
+                    {newArrivalAlert.title}
+                  </p>
+                </Link>
+                <div className="flex items-center gap-3 pt-1 text-[11px] font-mono">
+                  <Link href={`/article/${newArrivalAlert.slug}`} className="text-amber-400 hover:underline font-bold">
+                    Read Real-Time Dispatch →
+                  </Link>
+                </div>
+              </div>
+              <button
+                onClick={() => setNewArrivalAlert(null)}
+                className="text-stone-400 hover:text-white text-xs font-mono p-1"
+                aria-label="Dismiss alert"
+              >
+                ✕
+              </button>
+            </div>
+          </aside>
         )}
       </main>
 

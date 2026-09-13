@@ -229,12 +229,130 @@ Deploy to Appwrite with CRON schedule `*/15 * * * *` (every 15 minutes).
 
 ---
 
-## 🧪 7. VERIFICATION CHECKLIST
+## ⚡ 8. HOME PAGE REAL-TIME CONTENT REQUIREMENT (LIVE GLOBAL DASHBOARD)
+
+```text
+==================================================
+HOME PAGE REAL-TIME CONTENT REQUIREMENT
+==================================================
+
+Redesign the homepage to behave like a live global update dashboard.
+
+IMPORTANT:
+The homepage must NEVER show outdated articles or old content by default.
+
+Homepage should ONLY display:
+
+1. LATEST ARTICLES SECTION
+- Show only newly published articles.
+- Prioritize real-time updates.
+- Automatically refresh when new content is available.
+- Sort strictly by publishing time (newest first).
+- Remove old/stale articles from the homepage automatically.
+- Do not show evergreen/old articles unless they are currently trending or updated with new information.
+- Show timestamps:
+  - Published X minutes ago
+  - Updated X minutes ago
+
+Content priority:
+1. Breaking news
+2. Latest entertainment/news updates
+3. Trending global stories
+4. Newly discovered articles from trusted sources
+
+
+2. CURRENT BOX OFFICE SECTION
+
+Create a live box office section that always shows current data.
+
+Requirements:
+
+- Show only current movies currently relevant in theaters.
+- Automatically update box office numbers.
+- Display:
+  - Current ranking
+  - Movie name
+  - Daily earnings
+  - Weekly earnings
+  - Worldwide gross
+  - Trend movement
+  - Release date
+  - Theater status
+
+Do NOT display:
+- Old box office records
+- Historical movies
+- Expired charts
+
+Unless:
+- The movie is currently trending
+- A major milestone/news update happens
+
+
+==================================================
+AUTOMATIC CONTENT CLEANUP
+==================================================
+
+Implement automatic homepage freshness management:
+
+- Every article gets a freshness score.
+- Old content automatically moves away from homepage.
+- Trending algorithm decides what remains visible.
+- Breaking news gets priority.
+- Updated articles can return to homepage.
+- Duplicate stories should be merged.
+
+
+==================================================
+REAL-TIME UPDATE BEHAVIOR
+==================================================
+
+Homepage should work like a live application:
+
+- Background workers continuously fetch updates.
+- Frontend automatically receives new content.
+- Use:
+  - WebSockets
+  - Server Sent Events
+  - Real-time API polling
+
+When a new important article arrives:
+
+- Update homepage automatically.
+- Show "New Update Available" notification.
+- Refresh content without full page reload.
+
+
+==================================================
+FINAL HOMEPAGE EXPERIENCE
+==================================================
+
+The user opening the homepage should feel:
+
+"I am seeing what is happening right now in the world."
+
+Not:
+
+"A collection of old articles."
+
+The homepage must always prioritize freshness, current events, and live updates.
+==================================================
+```
+
+---
+
+## 🧪 9. VERIFICATION CHECKLIST
 Once deployed, verify that:
 - [ ] Masthead displays **THE SMOC TIMES** with live Mumbai/Delhi/Hollywood datelines.
-- [ ] Reddit crawler ingests from `r/BollyBlindsNGossip`, `r/bollywood`, `r/tollywood`, etc.
+- [ ] Homepage operates as a live real-time dashboard, automatically refreshing every 10 seconds without full page reload.
+- [ ] Dynamic relative timestamps are displayed ("Published X minutes ago", "Updated X minutes ago", "Just now • Wire Flash").
+- [ ] Floating "⚡ NEW WIRE UPDATE ARRIVED" toast triggers smoothly when new dispatches arrive.
+- [ ] Automatic content cleanup filters out stale/expired articles, prioritizing breaking news, newest timestamps, and trending stories.
+- [ ] Theatrical Ledger shows only currently relevant in-theater releases with Weekly, Daily, and Worldwide grosses, trend badges, and theater status.
+- [ ] Reddit crawler ingests from Indian gaming, business, Bollywood, Tollywood, BollyBlinds, and global pop culture.
 - [ ] Clicking any article shows full inverted-pyramid story, author byline, and TMDB hero photo.
 - [ ] Clicking the **Truth Verification Protocol** badge reveals the AI corroboration certificate and claims breakdown.
 - [ ] Navigating to `/admin` shows real-time crawler logs and allows triggering on-demand discovery sweeps.
 - [ ] Appwrite Cloud function triggers automatically every 15 minutes without any manual intervention.
 ```
+

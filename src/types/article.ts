@@ -65,6 +65,9 @@ export interface Article {
   fingerprint_hash?: string;
   tags?: string[];
   view_count?: number;
+  published_timestamp?: number;
+  freshness_score?: number;
+  trending_score?: number;
   
   // AI Agent Inspection Dossier
   content_agent?: ContentAgentMetadata;
