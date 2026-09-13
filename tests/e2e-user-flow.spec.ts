@@ -74,12 +74,12 @@ test.describe('The SMOC Times - E2E User Flow', () => {
 
     // Verify operations dashboard header
     await expect(page.getByText('Newsroom Operations & Autonomous Pipeline')).toBeVisible();
-    await expect(page.getByText('4-Agent Autonomous Editorial Matrix')).toBeVisible();
-    await expect(page.getByText('Live Autonomous Crawler Stream')).toBeVisible();
-    await expect(page.getByText('Monitored Global Feeds')).toBeVisible();
+    await expect(page.getByText('Intelligent Source Registry')).toBeVisible();
+    await expect(page.getByText('Live Autonomous Crawler')).toBeVisible();
+    await expect(page.getByText('Monitored Feeds')).toBeVisible();
 
     // Verify trigger button exists
-    const triggerBtn = page.getByRole('button', { name: /Trigger Discovery Cycle/i });
+    const triggerBtn = page.getByRole('button', { name: /Trigger Deep Cycle/i });
     await expect(triggerBtn).toBeVisible();
   });
 });

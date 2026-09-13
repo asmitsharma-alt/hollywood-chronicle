@@ -111,5 +111,10 @@ export interface AutonomousWorkerTelemetry {
   total_duplicates_filtered: number;
   uptime_seconds: number;
   active_sources_count: number;
+  successful_crawls?: number;
+  failed_crawls?: number;
+  queue_size?: number;
+  average_processing_time_ms?: number;
   recent_logs: CrawlerLogEntry[];
 }
+

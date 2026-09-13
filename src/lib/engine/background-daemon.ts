@@ -1,27 +1,27 @@
-import { runAutonomousCycle } from './autonomous-worker';
+import { runAutonomousCycle, runFastAutonomousSweep } from './autonomous-worker';
 
 let daemonInterval: NodeJS.Timeout | null = null;
 let isStarted = false;
 
-const INTERVAL_MS = 15 * 60 * 1000; // 15 minutes
+// 10-second scraping pipeline interval
+const INTERVAL_MS = 10 * 1000;
 
 export function startAutonomousDaemon() {
   if (isStarted) return;
   isStarted = true;
 
-  console.log('[AutonomousDaemon] Initializing 24/7 background intelligence daemon...');
+  console.log('[AutonomousDaemon] Initializing 24/7 high-speed background intelligence daemon (10s interval)...');
 
-  // Run initial cycle after 15 seconds of server bootup to allow full hydration
+  // Run initial cycle after 5 seconds of server bootup
   setTimeout(() => {
-    runAutonomousCycle().catch(err => {
+    runAutonomousCycle().catch((err) => {
       console.error('[AutonomousDaemon] Initial cycle error:', err);
     });
-  }, 15000);
+  }, 5000);
 
   daemonInterval = setInterval(() => {
-    console.log('[AutonomousDaemon] Triggering scheduled 15-minute autonomous discovery sweep...');
-    runAutonomousCycle().catch(err => {
-      console.error('[AutonomousDaemon] Scheduled cycle error:', err);
+    runFastAutonomousSweep().catch((err) => {
+      console.error('[AutonomousDaemon] 10s autonomous sweep error:', err);
     });
   }, INTERVAL_MS);
 }
@@ -32,4 +32,8 @@ export function stopAutonomousDaemon() {
     daemonInterval = null;
   }
   isStarted = false;
+}
+
+export function isDaemonActive(): boolean {
+  return isStarted;
 }
