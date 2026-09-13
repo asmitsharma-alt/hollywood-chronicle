@@ -13,6 +13,17 @@ interface Props {
 
 export default function Header({ onNewArticle, breakingNews = [] }: Props) {
   const [modalOpen, setModalOpen] = useState(false);
+  const [currentDateStr, setCurrentDateStr] = useState('Sunday, September 13, 2026');
+
+  useEffect(() => {
+    const now = new Date();
+    setCurrentDateStr(now.toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    }));
+  }, []);
 
   const defaultBreaking = [
     'EXCLUSIVE: Universal Locks Christopher Nolan Event Film for Mid-Summer 2026',
@@ -36,7 +47,7 @@ export default function Header({ onNewArticle, breakingNews = [] }: Props) {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1">
             <Calendar className="w-3 h-3 text-stone-500" />
-            <span>Sunday, September 13, 2026</span>
+            <span>{currentDateStr}</span>
           </div>
           <span className="hidden md:inline text-stone-400">|</span>
           <div className="hidden md:flex items-center gap-1">
