@@ -12,9 +12,9 @@ export async function POST(req: Request) {
     const requestedTopic = body.topic?.trim();
     const isRedditMode = body.mode === 'reddit' || body.source === 'reddit';
 
-    let sources = [];
+    let sources: Array<{ title: string; snippet: string; source: string; url: string }> = [];
     let targetTopic = requestedTopic;
-    let redditSourceInfo = null;
+    let redditSourceInfo: { name: string; url: string; stance: string } | null = null;
 
     if (isRedditMode || (!requestedTopic && Math.random() > 0.3)) {
       // Scrape live Reddit pop culture
