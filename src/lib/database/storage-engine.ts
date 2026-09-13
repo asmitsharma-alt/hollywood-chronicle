@@ -42,7 +42,7 @@ function initDbFiles() {
           timestamp: new Date().toISOString(),
           source: 'System Initialization',
           action: 'published',
-          headline: 'The Hollywood Chronicle 24/7 Autonomous Intelligence Core Initialized',
+          headline: 'The SMOC Times 24/7 Autonomous Intelligence Core Initialized',
           details: 'Broadsheet printing & discovery engine operating nominally.'
         }
       ]

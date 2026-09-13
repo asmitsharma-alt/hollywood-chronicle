@@ -77,10 +77,10 @@ export async function searchTopicDeepDive(topic: string): Promise<RawNewsItem[]>
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         api_key: TAVILY_API_KEY,
-        query: `${topic} Hollywood entertainment movie release casting official reports`,
+        query: `${topic} Indian Bollywood Hollywood cinema entertainment trade reports`,
         search_depth: 'advanced',
-        include_domains: ['variety.com', 'hollywoodreporter.com', 'deadline.com', 'thewrap.com', 'indiewire.com'],
-        max_results: 5
+        include_domains: ['pinkvilla.com', 'bollywoodhungama.com', 'indianexpress.com', 'hindustantimes.com', 'variety.com', 'hollywoodreporter.com', 'deadline.com'],
+        max_results: 6
       })
     });
     if (!res.ok) throw new Error('Tavily search failed');
@@ -88,9 +88,13 @@ export async function searchTopicDeepDive(topic: string): Promise<RawNewsItem[]>
     return (data.results || []).map((r: any) => ({
       title: r.title,
       snippet: r.content,
-      source: r.url.includes('variety.com') ? 'Variety' :
+      source: r.url.includes('pinkvilla.com') ? 'Pinkvilla' :
+              r.url.includes('bollywoodhungama.com') ? 'Bollywood Hungama' :
+              r.url.includes('indianexpress.com') ? 'The Indian Express' :
+              r.url.includes('hindustantimes.com') ? 'Hindustan Times' :
+              r.url.includes('variety.com') ? 'Variety' :
               r.url.includes('hollywoodreporter.com') ? 'The Hollywood Reporter' :
-              r.url.includes('deadline.com') ? 'Deadline' : 'Industry Wire',
+              r.url.includes('deadline.com') ? 'Deadline' : 'SMOC Wire Desk',
       url: r.url
     }));
   } catch (err) {

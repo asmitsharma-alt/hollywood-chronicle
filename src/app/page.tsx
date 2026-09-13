@@ -85,11 +85,11 @@ function HomePageContent() {
           __html: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'NewsMediaOrganization',
-            name: 'The Hollywood Chronicle',
+            name: 'The SMOC Times',
             url: 'https://hollywood-chronicle.vercel.app',
             logo: 'https://hollywood-chronicle.vercel.app/favicon.ico',
             sameAs: ['https://twitter.com', 'https://reddit.com'],
-            description: 'The authoritative daily dispatch on motion pictures, streaming, and entertainment culture. Verified by autonomous AI machine wire.'
+            description: 'The authoritative daily dispatch on Indian pop culture, cinema, streaming, and global entertainment. Verified by autonomous AI machine wire.'
           })
         }}
       />
@@ -480,10 +480,10 @@ function HomePageContent() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 border-b border-stone-400 pb-6">
             <div>
               <h5 className="font-serif font-bold text-stone-900 uppercase text-sm mb-2">
-                The Hollywood Chronicle
+                The SMOC Times
               </h5>
               <p className="text-[11px] leading-relaxed text-stone-600">
-                Founded to record the cinematic arts, television production, and theatrical exhibition with uncompromising fact-checking and broadsheet journalistic prose.
+                The premier broadsheet recording Indian pop culture, Bollywood, Tollywood, regional cinema, and global entertainment with uncompromising verification and trade reporting.
               </p>
             </div>
             <div>
@@ -507,14 +507,14 @@ function HomePageContent() {
                 Operations &amp; Wire
               </h5>
               <p className="text-[11px] leading-relaxed text-stone-600 font-mono">
-                Real-time crawling across Reddit, Variety, Deadline, and Google News RSS. <Link href="/admin" className="underline font-bold text-[#8b181b]">View Operations</Link>
+                Real-time crawling across Reddit (BollyBlinds, Bollywood, Tollywood), Pinkvilla, Variety, and RSS. <Link href="/admin" className="underline font-bold text-[#8b181b]">View Operations</Link>
               </p>
             </div>
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] font-mono text-stone-500 uppercase">
-            <span>© 2026 The Hollywood Chronicle Publishing Co. All Rights Reserved.</span>
-            <span>Printed at Hollywood, California • Autonomous Edition 2.0</span>
+            <span>© 2026 The SMOC Times Publishing Co. All Rights Reserved.</span>
+            <span>Printed at Mumbai, New Delhi &amp; Hollywood • Autonomous Edition 2.0</span>
           </div>
         </div>
       </footer>

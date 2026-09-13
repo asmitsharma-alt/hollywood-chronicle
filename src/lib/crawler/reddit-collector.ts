@@ -10,6 +10,12 @@ const parser = new XMLParser({
 });
 
 export const MONITORED_SUBREDDITS = [
+  'BollyBlindsNGossip',
+  'bollywood',
+  'tollywood',
+  'kollywood',
+  'IndianCinema',
+  'IndianOTTbestof',
   'popculturechat',
   'movies',
   'entertainment',
@@ -21,10 +27,10 @@ export const MONITORED_SUBREDDITS = [
 export async function collectTrendingFromReddit(): Promise<DiscoveredStoryCandidate[]> {
   const candidates: DiscoveredStoryCandidate[] = [];
 
-  // Google News indexer query for real-time Reddit discussions within the past 24 hours
+  // Google News indexer query covering both Indian and Global Pop Culture subreddits
   const subQuery = MONITORED_SUBREDDITS.map(s => `site:reddit.com/r/${s}`).join(' OR ');
   const query = `(${subQuery}) when:1d`;
-  const url = `https://news.google.com/rss/search?q=${encodeURIComponent(query)}&hl=en-US&gl=US&ceid=US:en`;
+  const url = `https://news.google.com/rss/search?q=${encodeURIComponent(query)}&hl=en-IN&gl=IN&ceid=IN:en`;
 
   try {
     const res = await throttledFetch(url, {
@@ -43,7 +49,7 @@ export async function collectTrendingFromReddit(): Promise<DiscoveredStoryCandid
     const items = parsed?.rss?.channel?.item || [];
     const itemList = Array.isArray(items) ? items : [items];
 
-    for (const item of itemList.slice(0, 15)) {
+    for (const item of itemList.slice(0, 20)) {
       let rawTitle = item.title?.['#text'] || item.title || '';
       let link = item.link?.['#text'] || item.link || '';
       let pubDate = item.pubDate || new Date().toISOString();
@@ -62,23 +68,37 @@ export async function collectTrendingFromReddit(): Promise<DiscoveredStoryCandid
 
       // Skip generic prompt questions or ultra short titles
       const isQuestion = /^(what|who|which|why|how|anyone|does anyone|did anyone)\b/i.test(rawTitle) || rawTitle.endsWith('?');
-      if (isQuestion || rawTitle.length < 22) continue;
+      if (isQuestion || rawTitle.length < 20) continue;
 
-      let matchedSub = 'r/popculturechat';
+      let matchedSub = 'r/BollyBlindsNGossip';
+      let category = 'BollyBlinds Gossip';
+
       for (const s of MONITORED_SUBREDDITS) {
-        if (rawTitle.toLowerCase().includes(s) || link.toLowerCase().includes(s)) {
+        if (rawTitle.toLowerCase().includes(s.toLowerCase()) || link.toLowerCase().includes(s.toLowerCase())) {
           matchedSub = `r/${s}`;
           break;
         }
+      }
+
+      if (matchedSub.includes('BollyBlinds')) {
+        category = 'BollyBlinds Gossip';
+      } else if (matchedSub.includes('bollywood') || matchedSub.includes('tollywood') || matchedSub.includes('kollywood') || matchedSub.includes('IndianCinema')) {
+        category = 'Indian Cinema';
+      } else if (matchedSub.includes('IndianOTT')) {
+        category = 'Streaming & OTT';
+      } else if (matchedSub.includes('movies') || matchedSub.includes('boxoffice')) {
+        category = 'Cinema';
+      } else {
+        category = 'Global Pop Culture';
       }
 
       candidates.push({
         title: rawTitle,
         url: link,
         sourceName: `${matchedSub} (Reddit Wire)`,
-        snippet: `Viral discourse trending on Reddit community ${matchedSub}. Published on wire: ${pubDate}`,
+        snippet: `Viral discourse trending on Indian & Global Reddit community ${matchedSub}. Published on wire: ${pubDate}`,
         publishedAt: pubDate,
-        categoryHint: matchedSub.includes('movies') || matchedSub.includes('boxoffice') ? 'Cinema' : 'Pop Culture',
+        categoryHint: category,
       });
     }
   } catch (err) {

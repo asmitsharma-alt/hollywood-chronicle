@@ -96,7 +96,7 @@ export default function AdminDashboardPage() {
           <div>
             <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-[#8b181b] font-bold">
               <Radio className="w-4 h-4 animate-pulse text-[#8b181b]" />
-              <span>THE HOLLYWOOD CHRONICLE • AUTONOMOUS INTELLIGENCE CORE</span>
+              <span>THE SMOC TIMES • AUTONOMOUS INTELLIGENCE CORE</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold uppercase tracking-tight text-stone-950 mt-1 font-headline">
               Newsroom Operations &amp; Autonomous Pipeline

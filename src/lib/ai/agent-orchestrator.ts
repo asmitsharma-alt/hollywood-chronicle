@@ -16,7 +16,7 @@ export interface MultiAgentPipelineOutput {
   slug: string;
   lead_paragraph: string;
   body_markdown: string;
-  category: 'Cinema' | 'Television' | 'Industry' | 'Box Office' | 'Awards' | 'Music' | 'Pop Culture';
+  category: 'Indian Cinema' | 'Hollywood & Global' | 'BollyBlinds Gossip' | 'Box Office' | 'Streaming & OTT' | 'Industry Wire' | string;
   author: string;
   verification_score: string;
   verification_summary: string;
@@ -44,25 +44,25 @@ export async function runMultiAgentPipeline(
     )
     .join('\n\n');
 
-  const systemPrompt = `You are the Autonomous Multi-Agent Editorial Intelligence Engine of THE HOLLYWOOD CHRONICLE, a prestigious broadsheet newspaper.
-You run 4 specialized AI agents that collaborate to transform raw news dispatches into a certified, production-grade journalistic article.
+  const systemPrompt = `You are the Autonomous Multi-Agent Editorial Intelligence Engine of THE SMOC TIMES, a premier global broadsheet newspaper covering Indian Pop Culture (Bollywood, Tollywood, Kollywood, BollyBlinds, OTT) alongside Global Cinema & Hollywood.
+You run 4 specialized AI agents that collaborate to transform raw news dispatches into a certified, broadsheet journalistic article.
 
 AGENT 1: CONTENT AGENT
-- Extract key entities, studio filings, quotes, dates, and production numbers.
-- Write in inverted-pyramid style with rich broadsheet vocabulary (Variety, The Hollywood Reporter caliber).
+- Extract key entities, studio filings, quotes, box office figures (in Crores ₹ and/or $ Millions), casting announcements, and production dates.
+- Write in inverted-pyramid style with rich, authoritative trade journalism prose.
 - Organize into 3-4 structured paragraphs with markdown subheadings (## Subtitle).
 - Provide 3 bulleted executive takeaways.
 
 AGENT 2: FACT-CHECK AGENT
-- Cross-examine claims across all sources.
-- Identify confirmed facts vs uncorroborated gossip/clickbait.
+- Cross-examine claims across Indian trade portals (Pinkvilla, Bollywood Hungama, Taran Adarsh) and global outlets (Variety, Deadline, Reddit r/BollyBlindsNGossip, r/bollywood).
+- Separate confirmed studio reports from uncorroborated blind gossip.
 - Assign an exact verification score from 7.0 to 10.0 (e.g., "9.8/10").
-- Provide 2-3 verified claims, any debunked/flagged rumors, and an evidence consensus statement.
+- Provide 2-3 verified claims and highlight any unsubstantiated rumors.
 
 AGENT 3: SEO AGENT
 - Generate an SEO title (under 65 chars).
-- Generate an OpenGraph meta description (140-160 chars) with high-intent keywords.
-- Suggest 5-8 relevant tags and a clean kebab-case URL slug.
+- Generate an OpenGraph meta description (140-160 chars) targeting high-intent Indian & global cinema searches.
+- Suggest 5-8 relevant tags (e.g., "Bollywood", "Shah Rukh Khan", "Box Office", "Tollywood") and a clean kebab-case URL slug.
 
 AGENT 4: QUALITY AGENT
 - Evaluate tone consistency, Flesch-Kincaid readability, and grammatical polish.
@@ -209,9 +209,9 @@ function createDeterministicFallback(
       consensus_summary: 'Multiple independent wire feeds confirm core elements.'
     },
     seo_agent: {
-      meta_title: `${topic} - The Hollywood Chronicle Trade Dispatch`,
-      meta_description: `Read verified trade reports on ${topic}. Inside analysis from The Hollywood Chronicle newsroom.`,
-      keywords: [topic, 'entertainment', 'hollywood', 'cinema'],
+      meta_title: `${topic} - The SMOC Times Trade Dispatch`,
+      meta_description: `Read verified trade reports on ${topic}. Inside analysis from The SMOC Times newsroom.`,
+      keywords: [topic, 'entertainment', 'cinema', 'bollywood', 'trade'],
       canonical_url: `/article/${cleanSlug}`
     },
     quality_agent: {

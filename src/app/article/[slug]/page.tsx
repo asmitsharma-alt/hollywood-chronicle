@@ -19,11 +19,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const article = await fetchArticleBySlug(params.slug);
   if (!article) {
     return {
-      title: 'Article Not Found | The Hollywood Chronicle',
+      title: 'Article Not Found | The SMOC Times',
     };
   }
 
-  const title = article.seo_agent?.meta_title || `${article.title} | The Hollywood Chronicle`;
+  const title = article.seo_agent?.meta_title || `${article.title} | The SMOC Times`;
   const description = article.seo_agent?.meta_description || article.lead_paragraph;
   const keywords = article.seo_agent?.keywords || article.tags || ['Hollywood', 'Cinema', 'News'];
 
@@ -88,7 +88,7 @@ export default async function ArticlePage({ params }: PageProps) {
     ],
     publisher: {
       '@type': 'Organization',
-      name: 'The Hollywood Chronicle',
+      name: 'The SMOC Times',
       logo: {
         '@type': 'ImageObject',
         url: 'https://hollywood-chronicle.vercel.app/favicon.ico',
@@ -324,7 +324,7 @@ export default async function ArticlePage({ params }: PageProps) {
               <ArrowLeft className="w-4 h-4" /> Back to Front Page Broadsheet
             </Link>
             <span className="font-mono text-xs text-stone-500">
-              The Hollywood Chronicle • Edition No. 257
+              The SMOC Times • Edition No. 257
             </span>
           </div>
         </article>

@@ -1,0 +1,8 @@
+{
+  "name": "smoc-crawler",
+  "version": "1.0.0",
+  "description": "SMOC Times 24/7 Autonomous Intelligence & Indian Pop Culture Discovery Crawler",
+  "main": "src/main.js",
+  "type": "module",
+  "dependencies": {}
+}

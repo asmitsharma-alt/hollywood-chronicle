@@ -29,8 +29,8 @@ const courier = Courier_Prime({
 });
 
 export const metadata: Metadata = {
-  title: 'THE HOLLYWOOD CHRONICLE — The Daily Pop Culture & Cinema Broadsheet',
-  description: 'The authoritative daily dispatch on motion pictures, television, streaming, and entertainment culture. Verified by AI, printed for the broadside.',
+  title: 'THE SMOC TIMES — The Daily Global & Indian Pop Culture Broadsheet',
+  description: 'The authoritative daily broadsheet on Bollywood, Indian Cinema, Tollywood, BollyBlinds, Hollywood, and global pop culture. Verified by autonomous AI machine wire.',
   icons: {
     icon: '/favicon.ico',
   },

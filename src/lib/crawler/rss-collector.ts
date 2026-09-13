@@ -19,32 +19,37 @@ const parser = new XMLParser({
 
 export const FEEDS = [
   {
+    name: 'Google News India Entertainment',
+    url: 'https://news.google.com/rss/headlines/section/topic/ENTERTAINMENT?hl=en-IN&gl=IN&ceid=IN:en',
+    category: 'Indian Cinema',
+  },
+  {
+    name: 'Bollywood & Pan-India Wire',
+    url: 'https://news.google.com/rss/search?q=bollywood+OR+tollywood+OR+kollywood+movie+box+office+when:1d&hl=en-IN&gl=IN&ceid=IN:en',
+    category: 'Indian Cinema',
+  },
+  {
     name: 'Variety',
     url: 'https://variety.com/feed/',
-    category: 'Industry',
+    category: 'Industry Wire',
   },
   {
     name: 'Deadline',
     url: 'https://deadline.com/feed/',
-    category: 'Cinema',
+    category: 'Hollywood & Global',
   },
   {
     name: 'The Hollywood Reporter',
     url: 'https://www.hollywoodreporter.com/feed/',
-    category: 'Cinema',
+    category: 'Hollywood & Global',
   },
   {
-    name: 'BBC Entertainment',
+    name: 'BBC Entertainment & Arts',
     url: 'http://feeds.bbci.co.uk/news/entertainment_and_arts/rss.xml',
-    category: 'Pop Culture',
+    category: 'Global Pop Culture',
   },
   {
-    name: 'Google News Entertainment',
-    url: 'https://news.google.com/rss/headlines/section/topic/ENTERTAINMENT?hl=en-US&gl=US&ceid=US:en',
-    category: 'Cinema',
-  },
-  {
-    name: 'Google News Movies & Box Office',
+    name: 'Google News Global Movies & Box Office',
     url: 'https://news.google.com/rss/search?q=box+office+movies+film+studio+premiere+when:1d&hl=en-US&gl=US&ceid=US:en',
     category: 'Box Office',
   }

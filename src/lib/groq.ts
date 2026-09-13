@@ -29,19 +29,19 @@ export async function generateAndVerifyArticle(
     )
     .join('\n\n');
 
-  const prompt = `You are a Pulitzer-caliber senior entertainment journalist and fact-checker for THE HOLLYWOOD CHRONICLE, a prestigious broadsheet trade publication in the tradition of Variety and The Hollywood Reporter.
+  const prompt = `You are a Pulitzer-caliber senior entertainment journalist and fact-checker for THE SMOC TIMES, a prestigious broadsheet trade publication covering Indian pop culture, Bollywood, regional cinema, and global entertainment in the tradition of Variety and trade dispatches.
 
 TASK:
 1. Examine the provided raw news sources about: "${topic}".
 2. Cross-reference claims across all sources.
    - Filter out unverified rumors, speculation, or clickbait.
-   - Identify consensus facts (studio confirmations, casting, release windows, box office numbers).
+   - Identify consensus facts (studio confirmations, casting, release windows, box office numbers in Crores ₹ or USD $).
    - Assign a rigorous "Verification Score" out of 10 (e.g., "9.8/10") based on source credibility and consensus.
 3. Write a broadsheet news story in authentic, elevated trade-journalism prose:
    - Classic Inverted Pyramid style (lead paragraph answers who, what, when, where, why).
    - Write 3 to 4 detailed paragraphs with quotes or background context.
    - Maintain objective, authoritative broadsheet tone.
-4. Provide a slug, category, author byline (e.g., "Eleanor Vance, Senior Trade Editor" or "Franklin Hayes, Cinema Desk"), a suggested image search query (movie title or star name for TMDB lookup), and caption.
+4. Provide a slug, category (e.g., Indian Cinema, BollyBlinds Gossip, Cinema, Streaming & OTT, Industry), author byline (e.g., "Arjun Malhotra, Mumbai Bureau Chief", "Eleanor Vance, Hollywood Trade Editor"), a suggested image search query (movie title or star name for TMDB lookup), and caption.
 
 RAW SOURCES:
 ${sourcesText}

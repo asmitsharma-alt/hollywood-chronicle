@@ -1,12 +1,12 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('The Hollywood Chronicle - E2E User Flow', () => {
+test.describe('The SMOC Times - E2E User Flow', () => {
   test('Homepage renders vintage broadsheet elements cleanly', async ({ page }) => {
     await page.goto('/');
 
     // Verify masthead title
     const masthead = page.locator('header h1');
-    await expect(masthead).toContainText('THE HOLLYWOOD CHRONICLE');
+    await expect(masthead).toContainText('THE SMOC TIMES');
 
     // Verify dateline and wire ticker
     await expect(page.locator('header').getByText('VOL. CXXIV • NO. 257')).toBeVisible();

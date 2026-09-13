@@ -1,4 +1,4 @@
-# Production Multi-Stage Dockerfile for The Hollywood Chronicle
+# Production Multi-Stage Dockerfile for The SMOC Times
 FROM node:20-alpine AS base
 
 # Stage 1: Dependencies
