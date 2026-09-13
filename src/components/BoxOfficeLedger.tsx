@@ -12,15 +12,21 @@ export default function BoxOfficeLedger() {
   const [viewMetric, setViewMetric] = useState<'weekly' | 'daily' | 'worldwide'>('weekly');
 
   useEffect(() => {
-    fetch('/api/boxoffice')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.results) {
-          setItems(data.results.slice(0, 6));
-        }
-      })
-      .catch((err) => console.error('Box office load error:', err))
-      .finally(() => setLoading(false));
+    const loadBoxOffice = () => {
+      fetch('/api/boxoffice', { cache: 'no-store' })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.results) {
+            setItems(data.results.slice(0, 6));
+          }
+        })
+        .catch((err) => console.error('Box office load error:', err))
+        .finally(() => setLoading(false));
+    };
+
+    loadBoxOffice();
+    const interval = setInterval(loadBoxOffice, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
