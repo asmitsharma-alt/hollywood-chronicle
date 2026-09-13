@@ -19,9 +19,10 @@ function HomePageContent() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(categoryParam);
+  const [secondsToNextPoll, setSecondsToNextPoll] = useState(10);
 
   const fetchLatestArticles = () => {
-    fetch('/api/articles?limit=100')
+    fetch('/api/articles?limit=100', { cache: 'no-store' })
       .then((res) => res.json())
       .then((data) => {
         if (data.articles && data.articles.length > 0) {
@@ -34,9 +35,22 @@ function HomePageContent() {
 
   useEffect(() => {
     fetchLatestArticles();
-    // 24/7 background polling: automatically refresh the newspaper every 45 seconds
-    const interval = setInterval(fetchLatestArticles, 45000);
-    return () => clearInterval(interval);
+
+    // 24/7 high-speed wire polling: refresh every 10 seconds
+    const pollInterval = setInterval(() => {
+      fetchLatestArticles();
+      setSecondsToNextPoll(10);
+    }, 10000);
+
+    // 1-second countdown ticker for UI feedback
+    const countInterval = setInterval(() => {
+      setSecondsToNextPoll((prev) => (prev <= 1 ? 10 : prev - 1));
+    }, 1000);
+
+    return () => {
+      clearInterval(pollInterval);
+      clearInterval(countInterval);
+    };
   }, []);
 
   useEffect(() => {
@@ -74,7 +88,17 @@ function HomePageContent() {
 
   const tickerHeadlines = articles.map((a) => `${a.category.toUpperCase()}: ${a.title}`);
 
-  const categories = ['All', 'Cinema', 'Television', 'Box Office', 'Industry', 'Pop Culture'];
+  const categories = [
+    'All',
+    'Indian Cinema',
+    'Gaming & Esports',
+    'Business & D-Street',
+    'BollyBlinds Gossip',
+    'Indian Pop Culture',
+    'Streaming & OTT',
+    'Cinema',
+    'Box Office'
+  ];
 
   return (
     <div className="min-h-screen bg-[#fbf9f4] text-stone-900 flex flex-col font-body">
@@ -99,11 +123,15 @@ function HomePageContent() {
       <main className="max-w-7xl mx-auto px-4 py-6 flex-1 w-full">
         {/* Newspaper Issue Subhead Strip & Live Filter */}
         <div className="flex flex-wrap items-center justify-between border-b-2 border-stone-800 pb-3 mb-6 gap-3 text-xs font-mono uppercase tracking-wider text-stone-700">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <span className="bg-[#8b181b] text-white px-2 py-0.5 font-bold text-[10px]">
               FINAL DISPATCH
             </span>
-            <span>Hollywood Bureau • Wire Services &amp; Studio Correspondents</span>
+            <span className="hidden sm:inline">Mumbai, New Delhi &amp; Hollywood Bureaus</span>
+            <div className="flex items-center gap-1.5 bg-emerald-50 text-emerald-800 border border-emerald-300 px-2 py-0.5 font-bold text-[10px] tracking-normal">
+              <span className="w-2 h-2 rounded-full bg-emerald-600 animate-ping"></span>
+              <span>LIVE WIRE (Sync in {secondsToNextPoll}s)</span>
+            </div>
           </div>
 
           {/* Category Tabs & Quick Search */}

@@ -89,19 +89,25 @@ export default function Header({ onNewArticle, breakingNews = [] }: Props) {
               Front Page
             </Link>
             <Link href="/?cat=Indian+Cinema" className="text-stone-700 hover:text-[#8b181b] transition">
-              Indian Cinema &amp; Bollywood
+              Indian Cinema
+            </Link>
+            <Link href="/?cat=Gaming+%26+Esports" className="text-stone-700 hover:text-[#8b181b] transition">
+              Gaming &amp; Esports
+            </Link>
+            <Link href="/?cat=Business+%26+D-Street" className="text-stone-700 hover:text-[#8b181b] transition">
+              Business &amp; D-Street
             </Link>
             <Link href="/?cat=BollyBlinds+Gossip" className="text-stone-700 hover:text-[#8b181b] transition">
-              r/BollyBlinds Gossip
+              r/BollyBlinds
             </Link>
-            <Link href="/?cat=Hollywood+%26+Global" className="text-stone-700 hover:text-[#8b181b] transition">
-              Hollywood &amp; Global
+            <Link href="/?cat=Indian+Pop+Culture" className="text-stone-700 hover:text-[#8b181b] transition">
+              Pop Culture &amp; Cricket
             </Link>
             <Link href="/?cat=Box+Office" className="text-stone-700 hover:text-[#8b181b] transition">
-              Theatrical Ledger (₹ / $)
+              Box Office (₹ / $)
             </Link>
             <Link href="/?cat=Streaming+%26+OTT" className="text-stone-700 hover:text-[#8b181b] transition">
-              Streaming &amp; OTT
+              OTT Wire
             </Link>
             <Link href="/admin" className="text-[#8b181b] hover:text-black transition flex items-center gap-1 font-bold">
               <Activity className="w-3.5 h-3.5" />

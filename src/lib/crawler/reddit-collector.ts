@@ -10,18 +10,33 @@ const parser = new XMLParser({
 });
 
 export const MONITORED_SUBREDDITS = [
+  // Indian Cinema & Gossip
   'BollyBlindsNGossip',
   'bollywood',
   'tollywood',
   'kollywood',
   'IndianCinema',
   'IndianOTTbestof',
+  // Indian Gaming & Tech
+  'IndianGaming',
+  'mumbai_gamers',
+  'gaming',
+  'Games',
+  'pcgaming',
+  // Indian Business, Startups & D-Street Markets
+  'IndianStockMarket',
+  'IndianStartups',
+  'IndiaInvestments',
+  'IndianStreetBets',
+  // Indian Pop Culture & Internet Life
+  'IndiaSocial',
+  'CricketShitpost',
+  'Cricket',
+  // Global Entertainment & Wire
   'popculturechat',
   'movies',
-  'entertainment',
   'boxoffice',
-  'television',
-  'Fauxmoi'
+  'television'
 ];
 
 export async function collectTrendingFromReddit(): Promise<DiscoveredStoryCandidate[]> {
@@ -80,7 +95,13 @@ export async function collectTrendingFromReddit(): Promise<DiscoveredStoryCandid
         }
       }
 
-      if (matchedSub.includes('BollyBlinds')) {
+      if (matchedSub.includes('IndianGaming') || matchedSub.includes('gaming') || matchedSub.includes('Games') || matchedSub.includes('pcgaming') || matchedSub.includes('mumbai_gamers')) {
+        category = 'Gaming & Esports';
+      } else if (matchedSub.includes('StockMarket') || matchedSub.includes('Startups') || matchedSub.includes('Investments') || matchedSub.includes('StreetBets') || matchedSub.includes('business')) {
+        category = 'Business & D-Street';
+      } else if (matchedSub.includes('Cricket') || matchedSub.includes('IndiaSocial')) {
+        category = 'Indian Pop Culture';
+      } else if (matchedSub.includes('BollyBlinds')) {
         category = 'BollyBlinds Gossip';
       } else if (matchedSub.includes('bollywood') || matchedSub.includes('tollywood') || matchedSub.includes('kollywood') || matchedSub.includes('IndianCinema')) {
         category = 'Indian Cinema';

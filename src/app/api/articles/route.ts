@@ -34,13 +34,21 @@ export async function GET(req: Request) {
     const total = articles.length;
     const paginated = articles.slice(offset, offset + limit);
 
-    return NextResponse.json({
-      success: true,
-      total,
-      articles: paginated,
-      offset,
-      limit,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        total,
+        articles: paginated,
+        offset,
+        limit,
+        timestamp: new Date().toISOString(),
+      },
+      {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+        },
+      }
+    );
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
   }

@@ -33,7 +33,7 @@ test.describe('The SMOC Times - E2E User Flow', () => {
     await searchInput.fill('');
 
     // Test category filter tabs
-    const cinemaTab = page.getByRole('button', { name: 'Cinema' });
+    const cinemaTab = page.getByRole('button', { name: 'Cinema', exact: true });
     await expect(cinemaTab).toBeVisible();
     await cinemaTab.click();
 

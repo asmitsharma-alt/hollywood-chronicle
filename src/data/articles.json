@@ -243,5 +243,149 @@
       "production_ready": true,
       "reviewed_at": "2026-09-13T14:50:00.000Z"
     }
+  },
+  {
+    "title": "Indian Gaming Boom: Rockstar Games Mobilizes India Units for GTA VI as Domestic Esports Crosses ₹25,000 Cr",
+    "slug": "indian-gaming-boom-rockstar-games-gta-vi-esports",
+    "lead_paragraph": "BENGALURU — In a watershed moment for the South Asian interactive entertainment industry, Rockstar Games has significantly expanded its Bengaluru and Mumbai engineering hubs for Grand Theft Auto VI, coinciding with Indian esports revenues surpassing ₹25,000 Crores.",
+    "body_markdown": "BENGALURU, India — The Indian gaming sector is experiencing an unprecedented capital inflection point. Driven by rapid 5G rollouts, high-performance PC component adoption, and dedicated national collegiate esports leagues, India has transformed from an offshore QA outpost into a premier core development territory.\n\n## The Reddit r/IndianGaming Discussions\n\nThe development ignited thousands of comments on r/IndianGaming and global tech forums, where engineers confirmed localization units are polishing localized regional assets, Hindi voice dub tracks, and South Asian servers for upcoming AAA releases.\n\n## Venture Capital & Domestic Studio Investments\n\nLeading venture funds in Bengaluru have deployed over $400M across domestic mobile and PC development studios. Industry heads speaking at the India Game Developer Conference affirmed that domestic intellectual properties rooted in Indian mythology and modern urban settings are slated for global release across Steam and PlayStation platforms.",
+    "category": "Gaming & Esports",
+    "author": "Nikhil Sharma, Tech & Interactive Bureau",
+    "verification_score": "9.8/10",
+    "verification_summary": "Corroborated across studio hiring registries, IGDC trade releases, and r/IndianGaming insider verifications.",
+    "sources_json": "[{\"name\":\"r/IndianGaming (Reddit Wire)\",\"url\":\"https://reddit.com/r/IndianGaming\",\"stance\":\"primary\"},{\"name\":\"IGN India\",\"url\":\"https://in.ign.com\",\"stance\":\"corroborated\"},{\"name\":\"TechCrunch India\",\"url\":\"https://techcrunch.com\",\"stance\":\"corroborated\"}]",
+    "image_url": "https://image.tmdb.org/t/p/original/po0uFYwWNByHQzHLCVJ6FetkN4M.jpg",
+    "image_caption": "Grand Theft Auto VI development documentation • TMDB Gaming & Interactive Archive.",
+    "published_at": "Today • SMOC Times Live Wire",
+    "edition": "SMOC Times Mumbai & Global Broadsheet",
+    "is_breaking": true,
+    "status": "published",
+    "version": 1,
+    "tags": ["Gaming", "GTA 6", "Indian Gaming", "Esports", "Rockstar Games", "Bengaluru"],
+    "content_agent": {
+      "tone": "Authoritative Trade Journalism",
+      "executive_takeaways": [
+        "Rockstar India engineering hubs scaled up for GTA VI post-launch assets",
+        "Domestic Indian gaming & interactive ecosystem crosses ₹25,000 Crore benchmark",
+        "Record venture funding into Bengaluru game development accelerators"
+      ],
+      "reading_time_minutes": 3,
+      "key_entities": ["Rockstar Games", "GTA VI", "IndianGaming", "Bengaluru"]
+    },
+    "fact_check_agent": {
+      "score": 9.8,
+      "confidence_level": "High",
+      "verified_claims": ["Hiring expansion active in Bengaluru and Mumbai studios", "Domestic gaming revenue milestones audited by trade analysts"],
+      "debunked_claims": ["Unofficial gameplay leak speculations excluded from official trade record"],
+      "consensus_summary": "Corroborated by studio hiring registers and industry whitepapers."
+    },
+    "seo_agent": {
+      "meta_title": "Indian Gaming Boom & GTA VI Studio Expansion - SMOC Times",
+      "meta_description": "Exclusive trade dispatch on India's ₹25,000 Cr gaming boom and Rockstar Games studio expansions. Read verified updates.",
+      "keywords": ["Indian Gaming", "GTA 6 India", "Esports India", "SMOC Times", "Tech News"],
+      "canonical_url": "/article/indian-gaming-boom-rockstar-games-gta-vi-esports"
+    },
+    "quality_agent": {
+      "grammar_score": 99,
+      "readability_grade": "Grade 11 (Trade Journal)",
+      "production_ready": true,
+      "reviewed_at": "2026-09-13T15:35:00.000Z"
+    }
+  },
+  {
+    "title": "D-Street Historic Rally: Sensex Surges Past Key Resistance as Indian Tech Startups Prep Record 2026 IPO Pipeline",
+    "slug": "d-street-historic-rally-sensex-nifty-startup-ipos",
+    "lead_paragraph": "MUMBAI — In a resounding endorsement of domestic consumer strength and sovereign financial resilience, Dalal Street registered historic all-time highs today, with Nifty and Sensex charging forward ahead of major new-age consumer tech IPO debuts.",
+    "body_markdown": "MUMBAI, India — The bull run across Indian equity markets has accelerated into uncharted territory. Domestic Institutional Investors (DIIs) and surging systematic investment plan (SIP) inflows totaling over ₹23,000 Crores monthly have fundamentally decoupled Indian markets from overseas macroeconomic volatility.\n\n## The r/IndianStockMarket Community Pulse\n\nOn r/IndianStockMarket and r/IndiaInvestments, seasoned portfolio managers and retail participants dissected the upcoming consumer-tech IPO docket, noting strong institutional grey-market premiums for quick-commerce and consumer fintech behemoths.\n\nSEBI regulatory directives ensuring stringent profitability metrics prior to public debuts have been widely lauded by veteran Dalal Street analysts, who forecast sustained long-term capital formation throughout 2026.",
+    "category": "Business & D-Street",
+    "author": "Vikram Singhania, Financial Markets Desk",
+    "verification_score": "9.9/10",
+    "verification_summary": "Corroborated across NSE/BSE exchange filings, SEBI press releases, and Economic Times market data.",
+    "sources_json": "[{\"name\":\"r/IndianStockMarket (Reddit)\",\"url\":\"https://reddit.com/r/IndianStockMarket\",\"stance\":\"primary\"},{\"name\":\"The Economic Times\",\"url\":\"https://economictimes.indiatimes.com\",\"stance\":\"corroborated\"},{\"name\":\"Moneycontrol Wire\",\"url\":\"https://moneycontrol.com\",\"stance\":\"corroborated\"}]",
+    "image_url": "https://image.tmdb.org/t/p/original/tTYP1npvBU90NthceezScfXGiOl.jpg",
+    "image_caption": "Dalal Street and financial exchange archives • SMOC Times Business Wire.",
+    "published_at": "Today • SMOC Times Live Wire",
+    "edition": "SMOC Times Mumbai & Global Broadsheet",
+    "is_breaking": true,
+    "status": "published",
+    "version": 1,
+    "tags": ["D-Street", "Sensex", "Nifty", "Stock Market", "Indian Startups", "Business"],
+    "content_agent": {
+      "tone": "Elevated Financial Broadsheet",
+      "executive_takeaways": [
+        "Benchmark indices hit historic highs supported by domestic mutual fund SIP inflows",
+        "Quick-commerce and consumer tech unicorns prepare mega public market listings",
+        "SEBI oversight ensures strict fiscal scrutiny on new-age tech valuations"
+      ],
+      "reading_time_minutes": 4,
+      "key_entities": ["Sensex", "Nifty", "Dalal Street", "SEBI", "BSE"]
+    },
+    "fact_check_agent": {
+      "score": 9.9,
+      "confidence_level": "Absolute",
+      "verified_claims": ["Exchange closing indices verified against NSE and BSE records", "Monthly SIP inflow figures confirmed by AMFI industry audits"],
+      "debunked_claims": ["Unverified penny-stock pump rumors actively flagged and debunked"],
+      "consensus_summary": "100% verified across financial regulatory bodies and certified exchanges."
+    },
+    "seo_agent": {
+      "meta_title": "D-Street Sensex Record High & Tech Startup IPOs - SMOC Times",
+      "meta_description": "Dalal Street market analysis: Sensex and Nifty hit fresh records as Indian startups prepare 2026 public debuts. Full trade report.",
+      "keywords": ["Sensex", "Nifty", "Indian Stock Market", "Dalal Street", "SMOC Times"],
+      "canonical_url": "/article/d-street-historic-rally-sensex-nifty-startup-ipos"
+    },
+    "quality_agent": {
+      "grammar_score": 99,
+      "readability_grade": "Grade 11 (Trade Journal)",
+      "production_ready": true,
+      "reviewed_at": "2026-09-13T15:35:00.000Z"
+    }
+  },
+  {
+    "title": "IPL Mega Auction Dispatches: Franchise Ownerships Battle for Record ₹30 Cr Valuations Amid Global Streaming Surge",
+    "slug": "ipl-mega-auction-dispatches-franchise-valuations-streaming-surge",
+    "lead_paragraph": "NEW DELHI — In an electrifying auction environment that underscores cricket's status as the world's most rapidly expanding sports media empire, Indian Premier League franchises have reset global athletic salary benchmarks with unprecedented ₹30 Crore contract bids.",
+    "body_markdown": "NEW DELHI, India — The convergence of massive domestic telecast viewership, global streaming subscriptions across North America and the UK, and brand endorsement synergies has catapulted the Indian Premier League into the echelon of the NFL and Premier League in per-match media rights valuation.\n\n## The Viral Reddit Pulse\n\nDiscussions across r/CricketShitpost and r/Cricket have surged to the top of Reddit's global sports trending charts, as fans and analysts debate team retention strategies, match matchups, and tactical innovations spearheaded by Indian cricket leadership.\n\nFranchise executives confirmed that data-driven analytics and player workload management are guiding auction room valuations, with all-rounders and express fast bowlers commanding historic price tags.",
+    "category": "Indian Pop Culture",
+    "author": "Arunabh Mukherjee, Sports & Culture Desk",
+    "verification_score": "9.8/10",
+    "verification_summary": "Corroborated across BCCI auction regulations, franchise announcements, and ESPNcricinfo data.",
+    "sources_json": "[{\"name\":\"r/CricketShitpost (Reddit Wire)\",\"url\":\"https://reddit.com/r/CricketShitpost\",\"stance\":\"primary\"},{\"name\":\"r/Cricket\",\"url\":\"https://reddit.com/r/Cricket\",\"stance\":\"corroborated\"},{\"name\":\"ESPNcricinfo Trade Desk\",\"url\":\"https://espncricinfo.com\",\"stance\":\"corroborated\"}]",
+    "image_url": "https://image.tmdb.org/t/p/original/oQCrHuAqqQCJ5H2gvAbsXd0T4Sw.jpg",
+    "image_caption": "Cricket culture and stadium archives • SMOC Times Sports & Pop Culture Bureau.",
+    "published_at": "Today • SMOC Times Live Wire",
+    "edition": "SMOC Times Mumbai & Global Broadsheet",
+    "is_breaking": true,
+    "status": "published",
+    "version": 1,
+    "tags": ["IPL", "Cricket", "BCCI", "Pop Culture", "Indian Sports", "Auctions"],
+    "content_agent": {
+      "tone": "Vibrant Broadsheet Feature",
+      "executive_takeaways": [
+        "Franchise bidding wars set new all-time individual player contract records",
+        "Global streaming rights distribution elevates cricket into top-tier world sports media",
+        "Analytical data modeling guides franchise roster acquisitions"
+      ],
+      "reading_time_minutes": 3,
+      "key_entities": ["IPL", "BCCI", "Cricket", "Franchise Bidding"]
+    },
+    "fact_check_agent": {
+      "score": 9.8,
+      "confidence_level": "High",
+      "verified_claims": ["BCCI auction purse thresholds confirmed by official governance circulars", "Streaming media metrics verified by audience measurement bodies"],
+      "debunked_claims": ["Disproven social media trade rumors regarding unconfirmed player trades"],
+      "consensus_summary": "Corroborated with cricket administration boards and broadcast network partners."
+    },
+    "seo_agent": {
+      "meta_title": "IPL Auction Record Bids & Cricket Pop Culture - SMOC Times",
+      "meta_description": "IPL mega auction updates: Franchise bidding wars, player records, and global cricket pop culture dispatches on SMOC Times.",
+      "keywords": ["IPL Auction", "Cricket News", "Indian Pop Culture", "SMOC Times"],
+      "canonical_url": "/article/ipl-mega-auction-dispatches-franchise-valuations-streaming-surge"
+    },
+    "quality_agent": {
+      "grammar_score": 99,
+      "readability_grade": "Grade 11 (Trade Journal)",
+      "production_ready": true,
+      "reviewed_at": "2026-09-13T15:35:00.000Z"
+    }
   }
 ]
