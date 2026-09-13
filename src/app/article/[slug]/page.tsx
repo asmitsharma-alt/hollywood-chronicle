@@ -199,8 +199,8 @@ export default async function ArticlePage({ params }: PageProps) {
                 <span className="font-serif italic text-stone-800">
                   {article.image_caption || 'Theatrical still / production record from studio archives.'}
                 </span>
-                <span className="uppercase text-[10px] text-stone-500 shrink-0 ml-2">
-                  ARCHIVE WIRE PHOTO
+                <span className="uppercase text-[10px] text-stone-500 shrink-0 ml-2 font-bold">
+                  SMOC TIMES WIRE PHOTO • TMDB OFFICIAL
                 </span>
               </div>
             </div>

@@ -167,6 +167,18 @@ function HomePageContent() {
                     </h4>
                   </Link>
 
+                  {art.image_url && (
+                    <Link href={`/article/${art.slug}`} className="block relative aspect-[16/9] w-full border border-stone-400 bg-stone-200 overflow-hidden my-2 group shadow-sm">
+                      <Image
+                        src={art.image_url}
+                        alt={art.title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition duration-300"
+                        sizes="(max-width: 768px) 100vw, 320px"
+                      />
+                    </Link>
+                  )}
+
                   {art.version && art.version > 1 && (
                     <div className="inline-block bg-amber-100 text-amber-900 border border-amber-300 text-[9px] font-mono font-bold px-1 py-0.2 uppercase">
                       v{art.version}.0 • Evolved Bulletin
@@ -244,21 +256,21 @@ function HomePageContent() {
 
                 {/* Hero Lead Image */}
                 <div className="space-y-1.5">
-                  <div className="relative aspect-[16/9] w-full border border-stone-400 bg-stone-200 overflow-hidden">
+                  <div className="relative aspect-[16/9] w-full border border-stone-800 bg-stone-200 overflow-hidden shadow-sm">
                     <Image
-                      src={leadArticle.image_url || 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1200&q=80'}
+                      src={leadArticle.image_url || 'https://image.tmdb.org/t/p/original/5LtSjMNw6j3LkG29Oa4O0iY5U8.jpg'}
                       alt={leadArticle.title}
                       fill
                       priority
-                      className="object-cover contrast-[1.05] filter grayscale-[15%]"
+                      className="object-cover contrast-[1.02] hover:scale-[1.01] transition duration-500"
                     />
                   </div>
                   <div className="flex items-start justify-between text-[11px] font-mono text-stone-600 leading-tight">
                     <span className="italic font-serif text-stone-800">
-                      {leadArticle.image_caption || 'Archival production photography.'}
+                      {leadArticle.image_caption || 'Archival production photography • SMOC Times Trade Bureau.'}
                     </span>
-                    <span className="uppercase text-[9px] text-stone-500 shrink-0 ml-2">
-                      CHRONICLE WIRE PHOTO
+                    <span className="uppercase text-[9px] text-stone-500 shrink-0 ml-2 font-bold tracking-wider">
+                      SMOC TIMES WIRE PHOTO • TMDB OFFICIAL
                     </span>
                   </div>
                 </div>
@@ -327,12 +339,12 @@ function HomePageContent() {
                 </Link>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-start">
-                  <div className="relative aspect-[4/3] w-full border border-stone-400 bg-stone-200">
+                  <div className="relative aspect-[4/3] w-full border border-stone-800 bg-stone-200 overflow-hidden shadow-sm">
                     <Image
-                      src={secondaryLead.image_url || 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1200&q=80'}
+                      src={secondaryLead.image_url || 'https://image.tmdb.org/t/p/original/i0Y0wP8H6SRgjr6QmuwbtQbS24D.jpg'}
                       alt={secondaryLead.title}
                       fill
-                      className="object-cover filter grayscale-[20%]"
+                      className="object-cover hover:scale-105 transition duration-300"
                     />
                   </div>
                   <div className="sm:col-span-2 space-y-2">
@@ -449,6 +461,18 @@ function HomePageContent() {
                       {art.title}
                     </h4>
                   </Link>
+
+                  {art.image_url && (
+                    <Link href={`/article/${art.slug}`} className="block relative aspect-[16/9] w-full border border-stone-400 bg-stone-200 overflow-hidden my-2 group shadow-sm">
+                      <Image
+                        src={art.image_url}
+                        alt={art.title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition duration-300"
+                        sizes="(max-width: 768px) 100vw, 280px"
+                      />
+                    </Link>
+                  )}
 
                   {art.version && art.version > 1 && (
                     <span className="inline-block bg-amber-100 text-amber-800 text-[9px] font-mono px-1 py-0.2 border border-amber-300 font-bold">
